@@ -1,3 +1,4 @@
+import { supabase } from "./supabaseClient";
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -744,6 +745,14 @@ const WishlistDrawer = ({ isOpen, onClose, items, onRemove, onAddToCart }: { isO
 };
 
 export default function App() {
+  const [dbItems, setDbItems] = React.useState([]);
+  React.useEffect(() => {
+    const getItems = async () => {
+      const { data } = await supabase.from("products").select("*");
+      if (data) setDbItems(data);
+    };
+    getItems();
+  }, []);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<'home' | 'product'>('home');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -807,7 +816,7 @@ export default function App() {
                     id="new-arrivals" 
                     title="New Arrivals" 
                     subtitle="The Latest Archive" 
-                    products={[...newArrivals, ...newArrivals]} 
+                    products={dbItems.length > 0 ? dbItems.map(i => ({...i, img: i.image_url, price: "$" + i.price})) : [...newArrivals, ...newArrivals]} 
                     onProductClick={(p) => { setSelectedProduct(p); setView('product'); }}
                     onAddToCart={handleAddToCart}
                   />
@@ -852,4 +861,5 @@ export default function App() {
     </div>
   );
 }
+
 
