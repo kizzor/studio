@@ -19,7 +19,7 @@ interface Product {
 }
 
 const ALL_PRODUCTS: Product[] = [
-  { id: '1', category: 'trending', name: "Oversized Silk Shirt", price: "$145", img: "https://images.unsplash.com/photo-1589310243389-96a5483213a8?auto=format&fit=crop&q=80&w=1000", description: "A luxurious oversized shirt crafted from 100% pure silk, offering a fluid silhouette and exceptional comfort.", details: ['100% Silk', 'Oversized fit', 'Archive item'] },
+  { id: '1', category: 'trending', name: "KISHORE KUMAR", price: "$145", img: "https://yxhdjxlakcsntswwxpwr.supabase.co/storage/v1/object/public/product-images/kishore.jpg", description: "A luxurious oversized shirt crafted from 100% pure silk, offering a fluid silhouette and exceptional comfort.", details: ['100% Silk', 'Oversized fit', 'Archive item'] },
   { id: '2', category: 'trending', name: "Linen Tailored Skirt", price: "$120", img: "https://images.unsplash.com/photo-1583496661160-fb4144f21f82?auto=format&fit=crop&q=80&w=1000", description: "Structured linen skirt with a minimalist profile and refined tailoring." },
   { id: '3', category: 'trending', name: "Double Breasted Blazer", price: "$320", img: "https://images.unsplash.com/photo-1548883354-94bcfe321cbb?auto=format&fit=crop&q=80&w=1000", description: "Sophisticated double-breasted blazer with sharp tailoring and structured shoulders." },
   { id: '4', category: 'trending', name: "Boxy Graphic T-Shirt", price: "$65", img: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&q=80&w=1000", description: "Heavyweight cotton t-shirt with a contemporary boxy fit." },
@@ -444,11 +444,11 @@ const ProductGrid = ({ title, products, subtitle, id, onProductClick, onAddToCar
                             onClick={() => !isDragging && onProductClick(product)}
                             className="min-w-[150px] md:min-w-[210px] lg:min-w-[250px] snap-start group/card cursor-pointer"
                         >
-                            <div className="aspect-[3/4] overflow-hidden mb-4 relative bg-grey-light shadow-sm border border-grey-dark/5">
+                            <div className="aspect-[3/4] overflow-hidden mb-4 relative bg-[#f9f9f7] shadow-sm border border-grey-dark/5 p-8 flex items-center justify-center">
                                 <img 
                                     src={product.img} 
                                     alt={product.name} 
-                                    className="w-full h-full object-cover transition-all duration-1000 group-hover/card:scale-105 pointer-events-none"
+                                    className="w-full h-full object-contain transition-all duration-1000 group-hover/card:scale-105 pointer-events-none"
                                 />
                                 <div className="absolute inset-0 bg-lemon/5 group-hover/card:bg-transparent transition-colors shadow-inner" />
                                 <div className="absolute top-4 right-4 md:top-6 md:right-6 translate-y-[-10px] opacity-0 group-hover/card:translate-y-0 group-hover/card:opacity-100 transition-all duration-500">
@@ -861,5 +861,7 @@ export default function App() {
     </div>
   );
 }
+
+
 
 
