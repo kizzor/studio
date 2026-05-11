@@ -618,17 +618,12 @@ const Preloader = ({ onComplete }: { onComplete: () => void, key?: string }) => 
   );
 };
 
-const ProductPage = ({ product: initialProduct, onBack, onAddToCart, onToggleWishlist, wishlist = [], relatedProducts }: { product: Product, onBack: () => void, onAddToCart: (p: Product) => void, onToggleWishlist: (p: Product) => void, wishlist: Product[], relatedProducts: Product[] }) => {
-  const [currentProduct, setCurrentProduct] = useState(initialProduct);
-  
+const ProductPage = ({ product, onBack, onAddToCart, onToggleWishlist, wishlist, relatedProducts, setSelectedProduct }: { product: Product, onBack: () => void, onAddToCart: (p: Product) => void, onToggleWishlist: (p: Product) => void, wishlist: Product[], relatedProducts: Product[], setSelectedProduct: (p: Product) => void }) => {
   useEffect(() => { 
-    if (initialProduct) setCurrentProduct(initialProduct);
     window.scrollTo(0, 0); 
-  }, [initialProduct, wishlist]);
+  }, [product.id]);
 
-  if (!currentProduct) return null;
-
-  const isItemInWishlist = wishlist.some(p => p.id === currentProduct.id);
+  const isInWishlist = wishlist.some(p => p.id === product.id);
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-32 pb-24 px-6 md:px-12 lg:px-24 bg-lemon min-h-screen">
@@ -636,19 +631,19 @@ const ProductPage = ({ product: initialProduct, onBack, onAddToCart, onToggleWis
         <ArrowLeft size={14} /> Back to Archive
       </button>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-        <div className="aspect-[3/4] bg-[#f9f9f7] overflow-hidden shadow-xl border border-grey-dark/5 p-12 flex items-center justify-center">
-          <img src={currentProduct.img} alt={currentProduct.name} className="w-full h-full object-contain" />
+        <div className="aspect-[3/4] bg-white border border-grey-dark/5 overflow-hidden shadow-xl border border-grey-dark/5 p-12 flex items-center justify-center">
+          <img src={product.img} alt={product.name} className="w-full h-full object-contain" />
         </div>
         <div className="space-y-10">
           <div>
-            <h1 className="text-4xl md:text-5xl font-sans font-black uppercase mb-4">{currentProduct.name}</h1>
-            <p className="text-2xl font-mono text-grey-dark/60">{currentProduct.price}</p>
+            <h1 className="text-4xl md:text-5xl font-sans font-black uppercase mb-4">{product.name}</h1>
+            <p className="text-2xl font-mono text-grey-dark/60">{product.price}</p>
           </div>
-          <p className="text-sm leading-relaxed text-grey-dark/60">{currentProduct.description || "Archive piece."}</p>
+          <p className="text-sm leading-relaxed text-grey-dark/60">{product.description || "Archive piece."}</p>
           <div className="flex flex-col gap-4">
-            <button onClick={() => onAddToCart(currentProduct)} className="w-full py-5 bg-grey-dark text-lemon text-[10px] uppercase font-black tracking-widest shadow-lg">Add to Cart</button>
-            <button onClick={() => { onToggleWishlist(currentProduct); }} className="w-full py-4 border border-grey-dark text-[10px] uppercase font-black tracking-widest flex items-center justify-center gap-2">
-              <Heart size={14} fill={wishlist.find(item => item.id === currentProduct.id) ? "black" : "none"} /> {wishlist.some(p => p.id === currentProduct.id) ? "In Wishlist" : "Add to Wishlist"}
+            <button onClick={() => onAddToCart(product)} className="w-full py-5 bg-grey-dark text-lemon text-[10px] uppercase font-black tracking-widest shadow-lg hover:bg-black transition-colors">Add to Cart</button>
+            <button onClick={() => onToggleWishlist(product)} className="w-full py-4 border border-grey-dark text-[10px] uppercase font-black tracking-widest flex items-center justify-center gap-2 hover:bg-grey-dark/5 transition-colors">
+              <Heart size={14} fill={isInWishlist ? "black" : "none"} /> {isInWishlist ? "In Wishlist" : "Add to Wishlist"}
             </button>
           </div>
         </div>
@@ -658,7 +653,7 @@ const ProductPage = ({ product: initialProduct, onBack, onAddToCart, onToggleWis
         title="Similar Arrivals" 
         subtitle="The Archive" 
         products={relatedProducts.slice(0, 8)} 
-        onProductClick={(p) => { setCurrentProduct(p); window.scrollTo(0,0); }} 
+        onProductClick={(p) => { setSelectedProduct(p); window.scrollTo(0,0); }} 
         onAddToCart={onAddToCart} 
       />
     </motion.div>
@@ -822,7 +817,7 @@ export default function App() {
                   onAddToCart={handleAddToCart}
                   onToggleWishlist={handleToggleWishlist}
                   wishlist={wishlist}
-                  relatedProducts={ALL_PRODUCTS.filter(p => p.id !== selectedProduct.id)}
+                  relatedProducts={ALL_PRODUCTS.filter(p => p.id !== selectedProduct.id)} setSelectedProduct={setSelectedProduct}
                 />
               ) : null}
             </main>
@@ -847,6 +842,10 @@ export default function App() {
     </div>
   );
 }
+
+
+
+
 
 
 
