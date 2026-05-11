@@ -624,7 +624,7 @@ const ProductPage = ({ product: initialProduct, onBack, onAddToCart, onToggleWis
   useEffect(() => { 
     if (initialProduct) setCurrentProduct(initialProduct);
     window.scrollTo(0, 0); 
-  }, [initialProduct]);
+  }, [initialProduct, wishlist]);
 
   if (!currentProduct) return null;
 
@@ -637,7 +637,7 @@ const ProductPage = ({ product: initialProduct, onBack, onAddToCart, onToggleWis
       </button>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
         <div className="aspect-[3/4] bg-[#f9f9f7] overflow-hidden shadow-xl border border-grey-dark/5 p-12 flex items-center justify-center">
-          <img src={currentProduct.img} alt={currentProduct.name} className="max-h-full max-w-full object-contain" />
+          <img src={currentProduct.img} alt={currentProduct.name} className="w-full h-full object-contain" />
         </div>
         <div className="space-y-10">
           <div>
@@ -647,8 +647,8 @@ const ProductPage = ({ product: initialProduct, onBack, onAddToCart, onToggleWis
           <p className="text-sm leading-relaxed text-grey-dark/60">{currentProduct.description || "Archive piece."}</p>
           <div className="flex flex-col gap-4">
             <button onClick={() => onAddToCart(currentProduct)} className="w-full py-5 bg-grey-dark text-lemon text-[10px] uppercase font-black tracking-widest shadow-lg">Add to Cart</button>
-            <button onClick={() => onToggleWishlist(currentProduct)} className="w-full py-4 border border-grey-dark text-[10px] uppercase font-black tracking-widest flex items-center justify-center gap-2">
-              <Heart size={14} fill={isItemInWishlist ? "black" : "none"} /> {isItemInWishlist ? "In Wishlist" : "Add to Wishlist"}
+            <button onClick={() => { onToggleWishlist(currentProduct); }} className="w-full py-4 border border-grey-dark text-[10px] uppercase font-black tracking-widest flex items-center justify-center gap-2">
+              <Heart size={14} fill={wishlist.find(item => item.id === currentProduct.id) ? "black" : "none"} /> {wishlist.some(p => p.id === currentProduct.id) ? "In Wishlist" : "Add to Wishlist"}
             </button>
           </div>
         </div>
@@ -821,7 +821,7 @@ export default function App() {
                   onBack={() => setView('home')} 
                   onAddToCart={handleAddToCart}
                   onToggleWishlist={handleToggleWishlist}
-                  isInWishlist={wishlist.some(p => p.id === selectedProduct.id)}
+                  wishlist={wishlist}
                   relatedProducts={ALL_PRODUCTS.filter(p => p.id !== selectedProduct.id)}
                 />
               ) : null}
@@ -847,6 +847,11 @@ export default function App() {
     </div>
   );
 }
+
+
+
+
+
 
 
 
