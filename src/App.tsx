@@ -618,10 +618,17 @@ const Preloader = ({ onComplete }: { onComplete: () => void, key?: string }) => 
   );
 };
 
-const ProductPage = ({ product, onBack, onAddToCart, onToggleWishlist, isInWishlist, relatedProducts }: { product: Product, onBack: () => void, onAddToCart: (p: Product) => void, onToggleWishlist: (p: Product) => void, isInWishlist: boolean, relatedProducts: Product[] }) => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [product]);
+const ProductPage = ({ product: initialProduct, onBack, onAddToCart, onToggleWishlist, wishlist = [], relatedProducts }: { product: Product, onBack: () => void, onAddToCart: (p: Product) => void, onToggleWishlist: (p: Product) => void, wishlist: Product[], relatedProducts: Product[] }) => {
+  const [currentProduct, setCurrentProduct] = useState(initialProduct);
+  
+  useEffect(() => { 
+    if (initialProduct) setCurrentProduct(initialProduct);
+    window.scrollTo(0, 0); 
+  }, [initialProduct]);
+
+  if (!currentProduct) return null;
+
+  const isItemInWishlist = wishlist.some(p => p.id === currentProduct.id);
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-32 pb-24 px-6 md:px-12 lg:px-24 bg-lemon min-h-screen">
@@ -629,52 +636,31 @@ const ProductPage = ({ product, onBack, onAddToCart, onToggleWishlist, isInWishl
         <ArrowLeft size={14} /> Back to Archive
       </button>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-        <div className="aspect-[3/4] bg-grey-light overflow-hidden shadow-xl border border-grey-dark/5">
-          <img src={product.img} alt={product.name} className="w-full h-full object-cover" />
+        <div className="aspect-[3/4] bg-[#f9f9f7] overflow-hidden shadow-xl border border-grey-dark/5 p-12 flex items-center justify-center">
+          <img src={currentProduct.img} alt={currentProduct.name} className="max-h-full max-w-full object-contain" />
         </div>
         <div className="space-y-10">
           <div>
-            <h1 className="text-4xl md:text-5xl font-sans font-black uppercase mb-4">{product.name}</h1>
-            <p className="text-2xl font-mono text-grey-dark/60">{product.price}</p>
+            <h1 className="text-4xl md:text-5xl font-sans font-black uppercase mb-4">{currentProduct.name}</h1>
+            <p className="text-2xl font-mono text-grey-dark/60">{currentProduct.price}</p>
           </div>
-          <p className="text-sm leading-relaxed text-grey-dark/60">{product.description || "Crafted with an essentialist lens, focusing on form and function."}</p>
+          <p className="text-sm leading-relaxed text-grey-dark/60">{currentProduct.description || "Archive piece."}</p>
           <div className="flex flex-col gap-4">
-            <button onClick={() => onAddToCart(product)} className="w-full py-5 bg-grey-dark text-lemon text-[10px] uppercase font-black tracking-widest shadow-lg">Add to Cart</button>
-            <button onClick={() => onToggleWishlist(product)} className="w-full py-4 border border-grey-dark text-[10px] uppercase font-black tracking-widest flex items-center justify-center gap-2">
-              <Heart size={14} fill={isInWishlist ? "currentColor" : "none"} /> {isInWishlist ? "In Wishlist" : "Add to Wishlist"}
+            <button onClick={() => onAddToCart(currentProduct)} className="w-full py-5 bg-grey-dark text-lemon text-[10px] uppercase font-black tracking-widest shadow-lg">Add to Cart</button>
+            <button onClick={() => onToggleWishlist(currentProduct)} className="w-full py-4 border border-grey-dark text-[10px] uppercase font-black tracking-widest flex items-center justify-center gap-2">
+              <Heart size={14} fill={isItemInWishlist ? "black" : "none"} /> {isItemInWishlist ? "In Wishlist" : "Add to Wishlist"}
             </button>
           </div>
         </div>
       </div>
-      <section className="mt-32">
-        <h2 className="text-xl font-sans font-black uppercase mb-10 pb-4 border-b border-grey-dark/10 tracking-widest">Similar Arrivals</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {relatedProducts.slice(0, 4).map(p => (
-            <div key={p.id} className="cursor-pointer group" onClick={() => { onBack(); onAddToCart(p); }}>
-              <div className="aspect-[3/4] bg-grey-light overflow-hidden mb-4 border border-grey-dark/5 shadow-sm">
-                <img src={p.img} alt={p.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-              </div>
-              <p className="text-[10px] uppercase font-black tracking-widest mb-1">{p.name}</p>
-              <p className="text-[9px] font-mono font-bold text-grey-dark/40">{p.price}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="mt-24">
-        <h2 className="text-xl font-sans font-black uppercase mb-10 pb-4 border-b border-grey-dark/10 tracking-widest">Most Viewed Archive</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {relatedProducts.slice(4, 8).map(p => (
-            <div key={p.id} className="cursor-pointer group" onClick={() => { onBack(); onAddToCart(p); }}>
-              <div className="aspect-[3/4] bg-grey-light overflow-hidden mb-4 border border-grey-dark/5 shadow-sm">
-                <img src={p.img} alt={p.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-              </div>
-              <p className="text-[10px] uppercase font-black tracking-widest mb-1">{p.name}</p>
-              <p className="text-[9px] font-mono font-bold text-grey-dark/40">{p.price}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      <ProductGrid 
+        id="related-1" 
+        title="Similar Arrivals" 
+        subtitle="The Archive" 
+        products={relatedProducts.slice(0, 8)} 
+        onProductClick={(p) => { setCurrentProduct(p); window.scrollTo(0,0); }} 
+        onAddToCart={onAddToCart} 
+      />
     </motion.div>
   );
 };
@@ -816,7 +802,7 @@ export default function App() {
                     id="new-arrivals" 
                     title="New Arrivals" 
                     subtitle="The Latest Archive" 
-                    products={dbItems.length > 0 ? dbItems.map(i => ({...i, img: i.image_url, price: "$" + i.price})) : [...newArrivals, ...newArrivals]} 
+                    products={dbItems.length > 0 ? dbItems.map(i => ({...i, id: i.id.toString(), img: i.image_url, price: "$" + i.price, description: i.description || "Archive piece.", details: i.details || ["Premium Quality"]})) : [...newArrivals, ...newArrivals]} 
                     onProductClick={(p) => { setSelectedProduct(p); setView('product'); }}
                     onAddToCart={handleAddToCart}
                   />
@@ -824,7 +810,7 @@ export default function App() {
                     id="trending" 
                     title="Most Trending" 
                     subtitle="Community Favorites" 
-                    products={[...trends, ...trends]} 
+                    products={dbItems.length > 0 ? [...dbItems.map(i => ({...i, img: i.image_url, price: "$" + i.price})), ...trends] : [...trends, ...trends]} 
                     onProductClick={(p) => { setSelectedProduct(p); setView('product'); }}
                     onAddToCart={handleAddToCart}
                   />
@@ -835,7 +821,7 @@ export default function App() {
                   onBack={() => setView('home')} 
                   onAddToCart={handleAddToCart}
                   onToggleWishlist={handleToggleWishlist}
-                  isInWishlist={!!wishlist.find(p => p.id === selectedProduct.id)}
+                  isInWishlist={wishlist.some(p => p.id === selectedProduct.id)}
                   relatedProducts={ALL_PRODUCTS.filter(p => p.id !== selectedProduct.id)}
                 />
               ) : null}
@@ -861,6 +847,19 @@ export default function App() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
