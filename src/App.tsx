@@ -1,3 +1,4 @@
+import SdnAdmin from './sdnadmin';
 import { supabase } from "./supabaseClient";
 /**
  * @license
@@ -725,7 +726,10 @@ const WishlistDrawer = ({ isOpen, onClose, items, onRemove, onAddToCart }: { isO
   );
 };
 
-export default function App() {
+export default function App() { 
+  const [isAdmin, setIsAdmin] = useState(window.location.pathname === "/sdnadmin");
+  if (isAdmin) return <SdnAdmin onClose={() => { window.history.pushState({}, "", "/"); setIsAdmin(false); }} />;
+
   const [dbItems, setDbItems] = React.useState([]);
   React.useEffect(() => {
     const getItems = async () => {
@@ -842,6 +846,7 @@ export default function App() {
     </div>
   );
 }
+
 
 
 
