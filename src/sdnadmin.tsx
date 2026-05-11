@@ -1,29 +1,62 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 export default function SdnAdmin({ onClose }: { onClose: () => void }) {
+    const [isNight, setIsNight] = useState(true); // Default to Night Mode
+    const [productName, setProductName] = useState("");
+    const [price, setPrice] = useState("");
+
     return (
-        <div className="fixed inset-0 z-[9999] bg-white p-12 overflow-y-auto font-mono text-[11px] text-black">
-            <div className="flex justify-between items-center mb-12 border-b border-black pb-6">
-                <h1 className="text-xl font-black uppercase tracking-tighter">SUPER DNA ADMIN // ARCHIVE</h1>
-                <button
-                    onClick={() => { window.history.pushState({}, "", "/"); onClose(); }}
-                    className="px-6 py-2 bg-black text-white font-bold uppercase"
-                >
-                    Exit_Session
+        <div className={`min-h-screen font-mono transition-colors duration-500 ${isNight ? 'bg-[#0a0a0a] text-[#f0f0f0]' : 'bg-white text-black'}`}>
+            {/* Header */}
+            <div className={`flex justify-between p-8 border-b ${isNight ? 'border-zinc-800' : 'border-black'}`}>
+                <div className="flex gap-4 items-center">
+                    <h1 className="text-sm font-bold tracking-[0.2em]">SUPER DNA ADMIN // ARCHIVE</h1>
+                    <button
+                        onClick={() => setIsNight(!isNight)}
+                        className={`text-[10px] px-2 py-1 border ${isNight ? 'border-zinc-700 hover:bg-zinc-800' : 'border-gray-200 hover:bg-gray-100'}`}
+                    >
+                        {isNight ? 'MODE: NIGHT' : 'MODE: DAY'}
+                    </button>
+                </div>
+                <button onClick={onClose} className={`px-4 py-2 text-xs font-bold uppercase tracking-widest ${isNight ? 'bg-white text-black' : 'bg-black text-white'}`}>
+                    EXIT_SESSION
                 </button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <div className="p-8 border border-black/10 bg-zinc-50">
-                    <h2 className="font-black mb-4 underline uppercase">System_Injection</h2>
-                    <div className="space-y-4">
-                        <input placeholder="PRODUCT_NAME" className="w-full border-b border-black/20 py-2 focus:outline-none bg-transparent" />
-                        <input placeholder="UNIT_PRICE" className="w-full border-b border-black/20 py-2 focus:outline-none bg-transparent" />
-                        <button className="w-full py-4 bg-black text-white font-bold uppercase mt-4">Sync_to_Archive</button>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 p-12">
+                {/* System Injection Column */}
+                <div className={`p-8 border ${isNight ? 'border-zinc-800 bg-zinc-900/30' : 'border-gray-100 bg-gray-50/50'}`}>
+                    <h2 className="text-xs font-bold mb-8 underline decoration-2 underline-offset-8 uppercase tracking-widest">SYSTEM_INJECTION</h2>
+
+                    <div className="space-y-6">
+                        <div>
+                            <label className="text-[10px] opacity-50 block mb-2">PRODUCT_NAME</label>
+                            <input
+                                type="text"
+                                value={productName}
+                                onChange={(e) => setProductName(e.target.value)}
+                                className={`w-full bg-transparent border-b pb-2 outline-none focus:border-blue-500 transition-colors ${isNight ? 'border-zinc-700' : 'border-black'}`}
+                            />
+                        </div>
+                        <div>
+                            <label className="text-[10px] opacity-50 block mb-2">UNIT_PRICE</label>
+                            <input
+                                type="text"
+                                value={price}
+                                onChange={(e) => setPrice(e.target.value)}
+                                className={`w-full bg-transparent border-b pb-2 outline-none focus:border-blue-500 transition-colors ${isNight ? 'border-zinc-700' : 'border-black'}`}
+                            />
+                        </div>
+                        <button className={`w-full py-4 mt-4 text-xs font-bold transition-all ${isNight ? 'bg-zinc-100 text-black hover:bg-white' : 'bg-black text-white hover:opacity-80'}`}>
+                            SYNC_TO_ARCHIVE
+                        </button>
                     </div>
                 </div>
-                <div className="p-8 border border-black/10">
-                    <h2 className="font-black mb-4 underline uppercase">Active_Inventory</h2>
-                    <p className="opacity-40 italic">Waiting for database bridge...</p>
+
+                {/* Active Inventory Column */}
+                <div className={`p-8 border ${isNight ? 'border-zinc-800 bg-zinc-900/30' : 'border-gray-100 bg-gray-50/50'}`}>
+                    <h2 className="text-xs font-bold mb-8 underline decoration-2 underline-offset-8 uppercase tracking-widest">ACTIVE_INVENTORY</h2>
+                    <p className="text-xs italic opacity-40">Waiting for database bridge...</p>
                 </div>
             </div>
         </div>
