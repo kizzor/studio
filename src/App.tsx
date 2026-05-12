@@ -1,7 +1,7 @@
 import SdnAdmin from './sdnadmin';
 import { supabase } from "./supabaseClient";
-import { INITIAL_CONFIG as siteData } from './siteConfig';
-/**
+import { INITIAL_CONFIG } from './siteConfig';
+/** 
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -195,7 +195,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
   );
 };
 
-const Hero = ({ onNavigate }: { onNavigate: (v: any) => void }) => {
+const Hero = ({ onNavigate, title, subtitle, backgroundImage }: { onNavigate?: (v: any) => void, title?: string, subtitle?: string, backgroundImage?: string }) => {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -213,7 +213,7 @@ const Hero = ({ onNavigate }: { onNavigate: (v: any) => void }) => {
         className="absolute inset-0 z-0"
       >
         <img
-          src="https://images.unsplash.com/photo-1550246140-5119ae4790b8?auto=format&fit=crop&q=80&w=2000"
+          src={backgroundImage || "https://images.unsplash.com/photo-1550246140-5119ae4790b8?auto=format&fit=crop&q=80&w=2000"}
           alt="Hero"
           className="w-full h-full object-cover brightness-[0.7]"
           onLoad={() => console.log('Hero image loaded')}
@@ -230,15 +230,15 @@ const Hero = ({ onNavigate }: { onNavigate: (v: any) => void }) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.5, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
         >
-          <span className="text-[9px] uppercase tracking-[0.4em] text-lemon/80 mb-3 block font-bold">Winter Collection 2026</span>
+          <span className="text-[9px] uppercase tracking-[0.4em] text-lemon/80 mb-3 block font-bold">{subtitle || "Winter Collection 2026"}</span>
           <h2 className="text-4xl md:text-6xl lg:text-7xl font-sans font-black uppercase leading-none tracking-tighter mb-8 text-lemon">
-            Timeless <br /> Redefined.
+            {title || "Timeless Redefined."}
           </h2>
           <div className="flex flex-col md:flex-row items-center justify-center gap-6">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => onNavigate('home')}
+              onClick={() => onNavigate?.('home')}
               className="px-8 py-3 bg-transparent border border-lemon text-lemon text-[10px] font-bold uppercase tracking-widest hover:bg-lemon hover:text-grey-dark transition-all duration-300 shadow-lg"
             >
               Shop Collection
@@ -732,14 +732,40 @@ export default function App() {
   if (isAdmin) return <SdnAdmin onClose={() => { window.history.pushState({}, "", "/"); setIsAdmin(false); }} />;
 
   const [dbItems, setDbItems] = React.useState([]);
-  React.useEffect(() => {
-    const getItems = async () => {
-      const { data } = await supabase.from("products").select("*");
-      if (data) setDbItems(data);
+  // 1. Initialize with a blank structure so it doesn't crash while loading
+  const [siteData, setSiteData] = useState({
+    dynamicSections: [],
+    hero_config: {},
+    quote_config: { text: "" },
+    banners_config: []
+  });
+
+  useEffect(() => {
+    const loadDNA = async () => {
+      // 1. Fetch Config
+      const { data: config, error: configError } = await supabase
+        .from('site_config')
+        .select('*')
+        .single();
+
+      if (config && !configError) {
+        setSiteData({
+          dynamicSections: config.dynamic_sections || [],
+          hero_config: config.hero_config || {},
+          quote_config: config.quote_config || {},
+          banners_config: config.banners_config || []
+        });
+      } else if (configError) {
+        console.error("Error fetching site config:", configError);
+      }
+      // 2. Fetch Products
+      const { data: products } = await supabase.from('products').select('*');
+      if (products) setDbItems(products);
     };
-    getItems();
+    loadDNA();
   }, []);
-  const [loading, setLoading] = useState(true);
+
+  const [loading, setLoading] = useState(true); // Keep this for the Preloader
   const [view, setView] = useState<'home' | 'product'>('home');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cartItems, setCartItems] = useState<{ product: Product, qty: number }[]>([]);
@@ -748,6 +774,7 @@ export default function App() {
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
 
   useEffect(() => {
+    // This useEffect is for the preloader, not data fetching.
     const timer = setTimeout(() => setLoading(false), 5000);
     return () => clearTimeout(timer);
   }, []);
@@ -784,7 +811,7 @@ export default function App() {
           <>
             <CustomCursor />
             <Navbar
-              onNavigate={(v) => { setView(v); window.scrollTo(0, 0); }}
+              onNavigate={(v) => { setView(v); window.scrollTo(0, 0); }} // Assuming Navbar doesn't need siteData directly
               cartCount={cartItems.reduce((acc, item) => acc + item.qty, 0)}
               wishlistCount={wishlist.length}
               onOpenCart={() => setIsCartOpen(true)}
@@ -793,32 +820,49 @@ export default function App() {
             <main>
               {view === 'home' ? (
                 <>
-                  <Hero onNavigate={setView} />
-                  <Quote />
+                  <Hero
+                    title={siteData.hero_config?.title}
+                    subtitle={siteData.hero_config?.subtitle}
+                    backgroundImage={siteData.hero_config?.image_url}
+                  />
+                  <section className="py-24 px-6 border-b border-white/10 text-center">
+                    <span className="text-[10px] tracking-[0.3em] text-white/30 mb-8 block uppercase">Philosophy</span>
+                    <h2 className="text-3xl md:text-5xl font-light italic max-w-4xl mx-auto leading-tight tracking-tight">
+                      "{siteData.quote_config?.text || "Purity of form is the highest expression of craft."}"
+                    </h2>
+                  </section>
 
                   {/* 1. The Editorial Banners */}
-                  <Banners onNavigate={(v, p) => {
-                    if (p) { setSelectedProduct(p); setView('product'); }
-                    else setView(v);
-                  }} />
+                  <div className="grid grid-cols-1 md:grid-cols-2 border-b border-white/10">
+                    {siteData.banners_config?.map((banner: any, i: number) => (
+                      <div key={i} className={`aspect-[4/5] relative group overflow-hidden ${i === 0 ? 'border-r border-white/10' : ''}`}>
+                        <img
+                          src={banner.img}
+                          className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                        />
+                        <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
+                      </div>
+                    ))}
+                  </div>
 
                   {/* 2. The Dynamic Sections */}
-                  {siteData.dynamicSections.map((section: any) => {
-                    // Force the correct data based on the section ID
-                    const items = section.id.toLowerCase().includes("trend") ? trends : newArrivals;
-
-                    return (
+                  {siteData.dynamicSections && siteData.dynamicSections.length > 0 ? (
+                    siteData.dynamicSections.map((section: any) => (
                       <ProductGrid
                         key={section.id}
                         id={section.id}
                         title={section.title}
                         subtitle={section.subtitle}
-                        products={items}
+                        products={section.id.toLowerCase().includes("trend") ? trends : newArrivals}
                         onProductClick={(p) => { setSelectedProduct(p); setView('product'); }}
                         onAddToCart={handleAddToCart}
                       />
-                    );
-                  })}
+                    ))
+                  ) : (
+                    <div className="py-20 text-center opacity-20 uppercase tracking-[0.5em] text-[10px]">
+                      Initializing_Archive_DNA...
+                    </div>
+                  )}
                 </>
               ) : selectedProduct ? (
                 <ProductPage
@@ -832,6 +876,7 @@ export default function App() {
                 />
               ) : null}
             </main>
+            {/* Footer will also need to be updated to use siteData.brand.description */}
             <Footer />
             <CartDrawer
               isOpen={isCartOpen}
