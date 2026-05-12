@@ -1,5 +1,6 @@
 import SdnAdmin from './sdnadmin';
 import { supabase } from "./supabaseClient";
+import { INITIAL_CONFIG as siteData } from './siteConfig';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -51,31 +52,30 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-6 transition-all duration-700 ${
-          isScrolled ? 'bg-lemon/90 backdrop-blur-xl py-4 border-b border-grey-dark/5 shadow-sm' : 'bg-transparent'
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-6 transition-all duration-700 ${isScrolled ? 'bg-lemon/90 backdrop-blur-xl py-4 border-b border-grey-dark/5 shadow-sm' : 'bg-transparent'
+          }`}
       >
         <div className="flex items-center gap-12">
-          <button 
+          <button
             className="lg:hidden text-grey-dark hover:text-grey-dark/70 transition-colors"
             onClick={() => setIsMobileMenuOpen(true)}
           >
             <Menu size={22} strokeWidth={1.5} />
           </button>
           <div className="hidden lg:flex items-center gap-10 whitespace-nowrap">
-             {['Shop All', 'T-Shirts', 'Denim', 'Archive'].map((item) => (
-              <a 
-                key={item} 
-                href="#" 
+            {['Shop All', 'T-Shirts', 'Denim', 'Archive'].map((item) => (
+              <a
+                key={item}
+                href="#"
                 className="text-[11px] uppercase tracking-[0.25em] font-medium text-grey-dark/40 hover:text-grey-dark transition-all hover:tracking-[0.3em]"
               >
                 {item}
               </a>
-             ))}
+            ))}
           </div>
         </div>
 
-        <motion.div 
+        <motion.div
           className="absolute left-1/2 -translate-x-1/2 cursor-pointer z-10 px-4 py-2 md:px-12 md:py-2.5 bg-grey-dark"
           style={{ width: 'clamp(140px, 40%, 300px)' }}
           whileHover={{ scale: 1.01 }}
@@ -86,13 +86,13 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
         </motion.div>
 
         <div className="flex items-center gap-8">
-          <button 
+          <button
             onClick={() => setIsSearchOpen(true)}
             className="text-grey-dark/40 hover:text-grey-dark transition-colors"
           >
             <Search size={20} strokeWidth={1} />
           </button>
-          <button 
+          <button
             onClick={onOpenWishlist}
             className="text-grey-dark/40 hover:text-grey-dark transition-colors relative"
           >
@@ -101,7 +101,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
               <span className="absolute -top-1.5 -right-1.5 text-[7px] bg-grey-mid text-lemon w-3.5 h-3.5 flex items-center justify-center rounded-full font-bold">{wishlistCount}</span>
             )}
           </button>
-          <button 
+          <button
             onClick={onOpenCart}
             className="text-grey-dark/40 hover:text-grey-dark transition-colors relative"
           >
@@ -130,18 +130,18 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
               </button>
             </div>
             <div className="max-w-4xl mx-auto w-full">
-              <input 
+              <input
                 autoFocus
-                type="text" 
-                placeholder="SEARCH ARCHIVE..." 
+                type="text"
+                placeholder="SEARCH ARCHIVE..."
                 className="w-full bg-transparent border-b border-grey-dark/20 py-6 text-4xl md:text-6xl font-display italic focus:outline-none focus:border-grey-dark transition-colors placeholder:text-grey-dark/20"
               />
               <div className="mt-12 flex flex-wrap gap-4">
                 <span className="text-[10px] uppercase tracking-widest text-grey-dark/30 font-medium font-mono">Trending:</span>
                 {['Tees', 'Selvage', 'Outerwear'].map(tag => (
-                   <button key={tag} className="text-[10px] uppercase tracking-widest font-bold hover:text-grey-dark transition-colors text-grey-dark/50">
-                     {tag}
-                   </button>
+                  <button key={tag} className="text-[10px] uppercase tracking-widest font-bold hover:text-grey-dark transition-colors text-grey-dark/50">
+                    {tag}
+                  </button>
                 ))}
               </div>
             </div>
@@ -208,13 +208,13 @@ const Hero = ({ onNavigate }: { onNavigate: (v: any) => void }) => {
 
   return (
     <section ref={containerRef} className="relative h-[85vh] md:h-[92vh] overflow-hidden flex items-center justify-center">
-      <motion.div 
-        style={{ y, scale }} 
+      <motion.div
+        style={{ y, scale }}
         className="absolute inset-0 z-0"
       >
-        <img 
-          src="https://images.unsplash.com/photo-1550246140-5119ae4790b8?auto=format&fit=crop&q=80&w=2000" 
-          alt="Hero" 
+        <img
+          src="https://images.unsplash.com/photo-1550246140-5119ae4790b8?auto=format&fit=crop&q=80&w=2000"
+          alt="Hero"
           className="w-full h-full object-cover brightness-[0.7]"
           onLoad={() => console.log('Hero image loaded')}
           onError={(e) => {
@@ -226,16 +226,16 @@ const Hero = ({ onNavigate }: { onNavigate: (v: any) => void }) => {
 
       <div className="relative z-10 text-center px-6 md:px-12 lg:px-24">
         <motion.div
-           initial={{ opacity: 0, y: 30 }}
-           animate={{ opacity: 1, y: 0 }}
-           transition={{ duration: 1.5, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.5, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
         >
           <span className="text-[9px] uppercase tracking-[0.4em] text-lemon/80 mb-3 block font-bold">Winter Collection 2026</span>
           <h2 className="text-4xl md:text-6xl lg:text-7xl font-sans font-black uppercase leading-none tracking-tighter mb-8 text-lemon">
             Timeless <br /> Redefined.
           </h2>
           <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-            <motion.button 
+            <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => onNavigate('home')}
@@ -243,7 +243,7 @@ const Hero = ({ onNavigate }: { onNavigate: (v: any) => void }) => {
             >
               Shop Collection
             </motion.button>
-            <motion.button 
+            <motion.button
               className="text-[10px] font-bold uppercase tracking-widest border-b border-lemon/30 pb-1 hover:border-lemon transition-colors flex items-center gap-2 text-lemon"
             >
               Learn More <ArrowRight size={12} />
@@ -252,7 +252,7 @@ const Hero = ({ onNavigate }: { onNavigate: (v: any) => void }) => {
         </motion.div>
       </div>
 
-      <motion.div 
+      <motion.div
         style={{ opacity }}
         animate={{ y: [0, 10, 0] }}
         transition={{ duration: 2, repeat: Infinity }}
@@ -265,228 +265,229 @@ const Hero = ({ onNavigate }: { onNavigate: (v: any) => void }) => {
 };
 
 const Quote = () => {
-    return (
-        <section className="py-6 px-6 md:px-12 lg:px-24 bg-lemon text-center">
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.3 }}
-                className="max-w-xl mx-auto"
-            >
-                <span className="text-[7px] md:text-[8px] uppercase tracking-[0.4em] text-grey-dark/30 mb-2 block font-bold">Philosophy</span>
-                <p className="text-base md:text-lg font-sans font-black uppercase leading-tight text-grey-dark italic">
-                   "Purity of form is the highest expression of craft."
-                </p>
-                <div className="w-6 h-px bg-grey-dark/10 mx-auto mt-3" />
-            </motion.div>
-        </section>
-    );
+  return (
+    <section className="py-6 px-6 md:px-12 lg:px-24 bg-lemon text-center">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, delay: 0.3 }}
+        className="max-w-xl mx-auto"
+      >
+        <span className="text-[7px] md:text-[8px] uppercase tracking-[0.4em] text-grey-dark/30 mb-2 block font-bold">Philosophy</span>
+        <p className="text-base md:text-lg font-sans font-black uppercase leading-tight text-grey-dark italic">
+          "Purity of form is the highest expression of craft."
+        </p>
+        <div className="w-6 h-px bg-grey-dark/10 mx-auto mt-3" />
+      </motion.div>
+    </section>
+  );
 };
 
 const Banners = ({ onNavigate }: { onNavigate: (v: any, p?: Product) => void }) => {
-    return (
-        <section className="px-6 md:px-12 lg:px-24 pb-12">
-            <div className="max-w-screen-xl mx-auto grid grid-cols-2 gap-0 overflow-hidden">
-                <motion.div 
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    whileTap={{ scale: 0.98 }}
-                    transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                    viewport={{ once: true }}
-                    className="relative h-[70vh] md:h-[90vh] overflow-hidden group cursor-pointer shadow-sm"
-                    onClick={() => onNavigate('product', ALL_PRODUCTS[0])}
-                >
-                    <img 
-                        src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=1200" 
-                        alt="Trending Editorial 1" 
-                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-grey-dark/10 group-hover:bg-transparent transition-colors" />
-                    <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex justify-center z-10 w-full px-4 text-center">
-                        <motion.button 
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="bg-white text-grey-dark text-[8px] md:text-[10px] uppercase font-bold tracking-[0.2em] shadow-xl border border-grey-dark/5 px-6 py-2.5 md:px-10 md:py-3.5 whitespace-nowrap"
-                        >
-                            Shop Now
-                        </motion.button>
-                    </div>
-                </motion.div>
-                <motion.div 
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    whileTap={{ scale: 0.98 }}
-                    transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                    viewport={{ once: true }}
-                    className="relative h-[70vh] md:h-[90vh] overflow-hidden group cursor-pointer shadow-sm"
-                    onClick={() => onNavigate('product', ALL_PRODUCTS[2])}
-                >
-                    <img 
-                        src="https://images.unsplash.com/photo-1534030347209-467a5b0ad3e6?auto=format&fit=crop&q=80&w=1200" 
-                        alt="Trending Editorial 2" 
-                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-grey-dark/10 group-hover:bg-transparent transition-colors" />
-                    <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex justify-center z-10 w-full px-4 text-center">
-                        <motion.button 
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="bg-white text-grey-dark text-[8px] md:text-[10px] uppercase font-bold tracking-[0.2em] shadow-xl border border-grey-dark/5 px-6 py-2.5 md:px-10 md:py-3.5 whitespace-nowrap"
-                        >
-                            Shop Now
-                        </motion.button>
-                    </div>
-                </motion.div>
-            </div>
-        </section>
-    );
+  return (
+    <section className="px-6 md:px-12 lg:px-24 pb-12">
+      <div className="max-w-screen-xl mx-auto grid grid-cols-2 gap-0 overflow-hidden">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true }}
+          className="relative h-[70vh] md:h-[90vh] overflow-hidden group cursor-pointer shadow-sm"
+          onClick={() => onNavigate('product', ALL_PRODUCTS[0])}
+        >
+          <img
+            src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=1200"
+            alt="Trending Editorial 1"
+            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-grey-dark/10 group-hover:bg-transparent transition-colors" />
+          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex justify-center z-10 w-full px-4 text-center">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-white text-grey-dark text-[8px] md:text-[10px] uppercase font-bold tracking-[0.2em] shadow-xl border border-grey-dark/5 px-6 py-2.5 md:px-10 md:py-3.5 whitespace-nowrap"
+            >
+              Shop Now
+            </motion.button>
+          </div>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true }}
+          className="relative h-[70vh] md:h-[90vh] overflow-hidden group cursor-pointer shadow-sm"
+          onClick={() => onNavigate('product', ALL_PRODUCTS[2])}
+        >
+          <img
+            src="https://images.unsplash.com/photo-1534030347209-467a5b0ad3e6?auto=format&fit=crop&q=80&w=1200"
+            alt="Trending Editorial 2"
+            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-grey-dark/10 group-hover:bg-transparent transition-colors" />
+          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex justify-center z-10 w-full px-4 text-center">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-white text-grey-dark text-[8px] md:text-[10px] uppercase font-bold tracking-[0.2em] shadow-xl border border-grey-dark/5 px-6 py-2.5 md:px-10 md:py-3.5 whitespace-nowrap"
+            >
+              Shop Now
+            </motion.button>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
 };
 
 const ProductGrid = ({ title, products, subtitle, id, onProductClick, onAddToCart }: { title: string, products: Product[], subtitle: string, id: string, onProductClick: (p: Product) => void, onAddToCart: (p: Product) => void }) => {
-    const ref = useRef<HTMLDivElement>(null);
-    const scrollRef = useRef<HTMLDivElement>(null);
-    const isInView = useInView(ref, { once: true, amount: 0.1 });
-    const [isDragging, setIsDragging] = useState(false);
-    const [startX, setStartX] = useState(0);
-    const [scrollLeft, setScrollLeft] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, amount: 0.1 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
-    const handleMouseDown = (e: React.MouseEvent) => {
-        if (!scrollRef.current) return;
-        setIsDragging(true);
-        setStartX(e.pageX - scrollRef.current.offsetLeft);
-        setScrollLeft(scrollRef.current.scrollLeft);
-    };
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!scrollRef.current) return;
+    setIsDragging(true);
+    setStartX(e.pageX - scrollRef.current.offsetLeft);
+    setScrollLeft(scrollRef.current.scrollLeft);
+  };
 
-    const handleMouseLeave = () => setIsDragging(false);
-    const handleMouseUp = () => setIsDragging(false);
+  const handleMouseLeave = () => setIsDragging(false);
+  const handleMouseUp = () => setIsDragging(false);
 
-    const handleMouseMove = (e: React.MouseEvent) => {
-        if (!isDragging || !scrollRef.current) return;
-        e.preventDefault();
-        const x = e.pageX - scrollRef.current.offsetLeft;
-        const walk = (x - startX) * 1.5;
-        scrollRef.current.scrollLeft = scrollLeft - walk;
-    };
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !scrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    scrollRef.current.scrollLeft = scrollLeft - walk;
+  };
 
-    const { scrollXProgress } = useScroll({
-        container: scrollRef,
+  const { scrollXProgress } = useScroll({
+    container: scrollRef,
+  });
+  const stripOpacity = useTransform(scrollXProgress, [0, 0.1, 0.9, 1], [0.8, 0.4, 0.4, 0.8]);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (!scrollRef.current) return;
+    const scrollAmount = scrollRef.current.clientWidth * 0.8;
+    scrollRef.current.scrollBy({
+      left: direction === 'left' ? -scrollAmount : scrollAmount,
+      behavior: 'smooth'
     });
-    const stripOpacity = useTransform(scrollXProgress, [0, 0.1, 0.9, 1], [0.8, 0.4, 0.4, 0.8]);
+  };
 
-    const scroll = (direction: 'left' | 'right') => {
-        if (!scrollRef.current) return;
-        const scrollAmount = scrollRef.current.clientWidth * 0.8;
-        scrollRef.current.scrollBy({
-            left: direction === 'left' ? -scrollAmount : scrollAmount,
-            behavior: 'smooth'
-        });
-    };
+  return (
+    <section id={id} ref={ref} className="py-12 overflow-hidden bg-lemon relative group/section">
+      <div className="px-6 md:px-12 lg:px-24 mb-8">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
+          transition={{ duration: 1 }}
+          className="flex flex-col md:flex-row justify-between items-end gap-6"
+        >
+          <div className="pl-1">
+            <span className="text-[8px] uppercase tracking-[0.4em] text-grey-dark/30 mb-2 block font-bold">
+              {subtitle}
+            </span>
+            <h2 className="text-xl md:text-3xl font-sans font-black tracking-tight uppercase text-grey-dark">{title}</h2>
+          </div>
+          <div className="hidden md:flex gap-4 items-center">
+            <div className="w-10 h-[1px] bg-grey-dark/20" />
+            <span className="text-[8px] uppercase tracking-widest font-bold text-grey-dark/40">Discover more</span>
+          </div>
+        </motion.div>
+      </div>
 
-    return (
-        <section id={id} ref={ref} className="py-12 overflow-hidden bg-lemon relative group/section">
-            <div className="px-6 md:px-12 lg:px-24 mb-8">
-                <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-                    transition={{ duration: 1 }}
-                    className="flex flex-col md:flex-row justify-between items-end gap-6"
-                >
-                    <div className="pl-1">
-                        <span className="text-[8px] uppercase tracking-[0.4em] text-grey-dark/30 mb-2 block font-bold">
-                            {subtitle}
-                        </span>
-                        <h2 className="text-xl md:text-3xl font-sans font-black tracking-tight uppercase text-grey-dark">{title}</h2>
-                    </div>
-                    <div className="hidden md:flex gap-4 items-center">
-                        <div className="w-10 h-[1px] bg-grey-dark/20" />
-                        <span className="text-[8px] uppercase tracking-widest font-bold text-grey-dark/40">Discover more</span>
-                    </div>
-                </motion.div>
-            </div>
-            
-            <div className="relative px-6 md:px-12 lg:px-24">
-                {/* Horizontal Navigation Buttons - Vertical Rectangle Style centered to images */}
-                <div className="absolute top-[40%] -translate-y-1/2 left-0 z-30 opacity-0 group-hover/section:opacity-100 transition-opacity duration-500">
-                    <button 
-                        onClick={() => scroll('left')}
-                        className="w-8 h-20 md:w-10 md:h-24 bg-grey-dark/10 backdrop-blur-sm text-grey-dark hover:bg-grey-dark hover:text-white transition-all flex items-center justify-center border-r border-grey-dark/5"
-                        aria-label="Scroll left"
-                    >
-                        <ChevronLeft size={20} strokeWidth={1} />
-                    </button>
+      <div className="relative px-6 md:px-12 lg:px-24">
+        {/* Horizontal Navigation Buttons - Vertical Rectangle Style centered to images */}
+        <div className="absolute top-[40%] -translate-y-1/2 left-0 z-30 opacity-0 group-hover/section:opacity-100 transition-opacity duration-500">
+          <button
+            onClick={() => scroll('left')}
+            className="w-8 h-20 md:w-10 md:h-24 bg-grey-dark/10 backdrop-blur-sm text-grey-dark hover:bg-grey-dark hover:text-white transition-all flex items-center justify-center border-r border-grey-dark/5"
+            aria-label="Scroll left"
+          >
+            <ChevronLeft size={20} strokeWidth={1} />
+          </button>
+        </div>
+        <div className="absolute top-[40%] -translate-y-1/2 right-0 z-30 opacity-0 group-hover/section:opacity-100 transition-opacity duration-500">
+          <button
+            onClick={() => scroll('right')}
+            className="w-8 h-20 md:w-10 md:h-24 bg-grey-dark/10 backdrop-blur-sm text-grey-dark hover:bg-grey-dark hover:text-white transition-all flex items-center justify-center border-l border-grey-dark/5"
+            aria-label="Scroll right"
+          >
+            <ChevronRight size={20} strokeWidth={1} />
+          </button>
+        </div>
+
+        <div
+          ref={scrollRef}
+          onMouseDown={handleMouseDown}
+          onMouseLeave={handleMouseLeave}
+          onMouseUp={handleMouseUp}
+          onMouseMove={handleMouseMove}
+          className="flex gap-6 md:gap-8 lg:gap-10 overflow-x-auto pb-16 no-scrollbar snap-x snap-mandatory cursor-grab active:cursor-grabbing select-none"
+          style={{ scrollBehavior: isDragging ? 'auto' : 'smooth' }}
+        >
+          {products.map((product, idx) => (
+            <motion.div
+              key={`${product.id}-${idx}`}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              whileHover={{ y: -8 }}
+              transition={{ duration: 0.6, delay: idx * 0.05, ease: [0.16, 1, 0.3, 1] }}
+              viewport={{ once: false, amount: 0.1 }}
+              onClick={() => !isDragging && onProductClick(product)}
+              className="min-w-[150px] md:min-w-[210px] lg:min-w-[250px] snap-start group/card cursor-pointer"
+            >
+              <div className="aspect-[3/4] overflow-hidden mb-4 relative bg-[#f9f9f7] shadow-sm border border-grey-dark/5 p-8 flex items-center justify-center">
+                <img
+                  src={product.img}
+                  alt={product.name}
+                  className="w-full h-full object-contain transition-all duration-1000 group-hover/card:scale-105 pointer-events-none"
+                />
+                <div className="absolute inset-0 bg-lemon/5 group-hover/card:bg-transparent transition-colors shadow-inner" />
+                <div className="absolute top-4 right-4 md:top-6 md:right-6 translate-y-[-10px] opacity-0 group-hover/card:translate-y-0 group-hover/card:opacity-100 transition-all duration-500">
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onAddToCart(product); }}
+                    className="border border-white/50 text-white bg-transparent backdrop-blur-md px-4 py-1 text-[8px] uppercase font-bold tracking-widest hover:bg-white hover:text-grey-dark transition-all"
+                  >
+                    Add
+                  </button>
                 </div>
-                <div className="absolute top-[40%] -translate-y-1/2 right-0 z-30 opacity-0 group-hover/section:opacity-100 transition-opacity duration-500">
-                    <button 
-                        onClick={() => scroll('right')}
-                        className="w-8 h-20 md:w-10 md:h-24 bg-grey-dark/10 backdrop-blur-sm text-grey-dark hover:bg-grey-dark hover:text-white transition-all flex items-center justify-center border-l border-grey-dark/5"
-                        aria-label="Scroll right"
-                    >
-                        <ChevronRight size={20} strokeWidth={1} />
-                    </button>
+              </div>                             <div className="flex flex-col gap-2 pl-1">
+                <div className="flex justify-between items-start">
+                  <h4 className="text-[9px] uppercase tracking-[0.2em] font-black text-grey-dark">{product.name}</h4>
+                  <span className="text-[9px] text-grey-dark/40 font-mono tracking-tighter">{product.price}</span>
                 </div>
+                <p className="text-[8px] text-grey-dark/30 uppercase tracking-widest font-medium">Fine Archive Piece</p>
+              </div>
+            </motion.div>
+          ))}
+          {/* Spacer for scroll-end padding */}
+          <div className="min-w-[1.5rem] md:min-w-[3rem] lg:min-w-[6rem] h-1" aria-hidden="true" />
+        </div>
 
-                <div 
-                    ref={scrollRef}
-                    onMouseDown={handleMouseDown}
-                    onMouseLeave={handleMouseLeave}
-                    onMouseUp={handleMouseUp}
-                    onMouseMove={handleMouseMove}
-                    className="flex gap-6 md:gap-8 lg:gap-10 overflow-x-auto pb-16 no-scrollbar snap-x snap-mandatory cursor-grab active:cursor-grabbing select-none"
-                    style={{ scrollBehavior: isDragging ? 'auto' : 'smooth' }}
-                >
-                    {products.map((product, idx) => (
-                        <motion.div 
-                            key={`${product.id}-${idx}`}
-                            initial={{ opacity: 0, y: 15 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            whileHover={{ y: -8 }}
-                            transition={{ duration: 0.6, delay: idx * 0.05, ease: [0.16, 1, 0.3, 1] }}
-                            viewport={{ once: false, amount: 0.1 }}
-                            onClick={() => !isDragging && onProductClick(product)}
-                            className="min-w-[150px] md:min-w-[210px] lg:min-w-[250px] snap-start group/card cursor-pointer"
-                        >
-                            <div className="aspect-[3/4] overflow-hidden mb-4 relative bg-[#f9f9f7] shadow-sm border border-grey-dark/5 p-8 flex items-center justify-center">
-                                <img 
-                                    src={product.img} 
-                                    alt={product.name} 
-                                    className="w-full h-full object-contain transition-all duration-1000 group-hover/card:scale-105 pointer-events-none"
-                                />
-                                <div className="absolute inset-0 bg-lemon/5 group-hover/card:bg-transparent transition-colors shadow-inner" />
-                                <div className="absolute top-4 right-4 md:top-6 md:right-6 translate-y-[-10px] opacity-0 group-hover/card:translate-y-0 group-hover/card:opacity-100 transition-all duration-500">
-                                    <button 
-                                        onClick={(e) => { e.stopPropagation(); onAddToCart(product); }}
-                                        className="border border-white/50 text-white bg-transparent backdrop-blur-md px-4 py-1 text-[8px] uppercase font-bold tracking-widest hover:bg-white hover:text-grey-dark transition-all"
-                                    >
-                                        Add
-                                    </button>
-                                </div>
-                            </div>                             <div className="flex flex-col gap-2 pl-1">
-                                <div className="flex justify-between items-start">
-                                    <h4 className="text-[9px] uppercase tracking-[0.2em] font-black text-grey-dark">{product.name}</h4>
-                                    <span className="text-[9px] text-grey-dark/40 font-mono tracking-tighter">{product.price}</span>
-                                </div>
-                                <p className="text-[8px] text-grey-dark/30 uppercase tracking-widest font-medium">Fine Archive Piece</p>
-                            </div>
-                        </motion.div>
-                    ))}
-                    {/* Spacer for scroll-end padding */}
-                    <div className="min-w-[1.5rem] md:min-w-[3rem] lg:min-w-[6rem] h-1" aria-hidden="true" />
-                </div>
-
-                {/* Denim Strip Effect (Progress Indicator) */}
-                <motion.div 
-                    style={{ opacity: stripOpacity }}
-                    className="absolute bottom-6 left-6 md:left-12 lg:left-24 right-6 md:right-12 lg:right-24 h-[1px] bg-grey-dark/10 rounded-full overflow-hidden"
-                >
-                    <motion.div 
-                        style={{ scaleX: scrollXProgress, transformOrigin: '0%' }}
-                        className="h-full bg-grey-dark w-full"
-                    />
-                </motion.div>
+        {/* Denim Strip Effect (Progress Indicator) */}
+        <motion.div
+          style={{ opacity: stripOpacity }}
+          className="absolute bottom-6 left-6 md:left-12 lg:left-24 right-6 md:right-12 lg:right-24 h-[1px] bg-grey-dark/10 rounded-full overflow-hidden"
+        >
+          <motion.div
+            style={{ scaleX: scrollXProgress, transformOrigin: '0%' }}
+            className="h-full bg-grey-dark w-full"
+          />
+        </motion.div>
 
 
-                {/* Custom styling to hide scrollbar and enable smooth scrolling */}
-                <style dangerouslySetInnerHTML={{ __html: `
+        {/* Custom styling to hide scrollbar and enable smooth scrolling */}
+        <style dangerouslySetInnerHTML={{
+          __html: `
                     .no-scrollbar::-webkit-scrollbar { display: none; }
                     .no-scrollbar { 
                         -ms-overflow-style: none; 
@@ -495,9 +496,9 @@ const ProductGrid = ({ title, products, subtitle, id, onProductClick, onAddToCar
                         -webkit-overflow-scrolling: touch;
                     }
                 ` }} />
-            </div>
-        </section>
-    );
+      </div>
+    </section>
+  );
 };
 
 const Footer = () => {
@@ -515,7 +516,7 @@ const Footer = () => {
             <Twitter className="text-grey-dark/40 hover:text-grey-dark cursor-pointer transition-colors" size={20} strokeWidth={1.5} />
           </div>
         </div>
-        
+
         <div>
           <h4 className="text-[10px] uppercase font-bold tracking-[0.3em] mb-6">Collections</h4>
           <ul className="space-y-3 text-grey-dark/40 text-[10px] uppercase tracking-widest font-bold">
@@ -525,7 +526,7 @@ const Footer = () => {
             <li className="hover:text-grey-dark cursor-pointer transition-colors">Outerwear</li>
           </ul>
         </div>
-        
+
         <div>
           <h4 className="text-[10px] uppercase font-bold tracking-[0.3em] mb-6">Help</h4>
           <ul className="space-y-3 text-grey-dark/40 text-[10px] uppercase tracking-widest font-bold">
@@ -536,7 +537,7 @@ const Footer = () => {
           </ul>
         </div>
       </div>
-      
+
       <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-12 border-t border-grey-dark/5 text-[8px] uppercase tracking-[0.3em] text-grey-dark/30 font-medium">
         <p>© 2026 Aurhouse Collective. Distributed by Art.</p>
         <div className="flex gap-8">
@@ -549,41 +550,41 @@ const Footer = () => {
 };
 
 const CustomCursor = () => {
-    const [position, setPosition] = useState({ x: 0, y: 0 });
-    const [isPointer, setIsPointer] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isPointer, setIsPointer] = useState(false);
 
-    useEffect(() => {
-        const handleMouseMove = (e: MouseEvent) => {
-            setPosition({ x: e.clientX, y: e.clientY });
-            const target = e.target as HTMLElement;
-            setIsPointer(window.getComputedStyle(target).cursor === 'pointer');
-        };
-        window.addEventListener('mousemove', handleMouseMove);
-        return () => window.removeEventListener('mousemove', handleMouseMove);
-    }, []);
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setPosition({ x: e.clientX, y: e.clientY });
+      const target = e.target as HTMLElement;
+      setIsPointer(window.getComputedStyle(target).cursor === 'pointer');
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
-    return (
-        <>
-            <motion.div
-                className="fixed top-0 left-0 w-1.5 h-1.5 bg-white rounded-full pointer-events-none z-[100] hidden lg:block mix-blend-difference"
-                animate={{
-                    x: position.x - 3,
-                    y: position.y - 3,
-                }}
-                transition={{ type: 'spring', damping: 30, stiffness: 200, mass: 0.1 }}
-            />
-            <motion.div
-                className="fixed top-0 left-0 w-6 h-6 border border-white/40 rounded-full pointer-events-none z-[100] hidden lg:block mix-blend-difference"
-                animate={{
-                    x: position.x - 12,
-                    y: position.y - 12,
-                    scale: isPointer ? 1.5 : 1,
-                    borderColor: isPointer ? 'rgba(255,255,255, 0.8)' : 'rgba(255,255,255, 0.4)',
-                }}
-                transition={{ type: 'spring', damping: 25, stiffness: 150, mass: 0.5 }}
-            />
-        </>
-    );
+  return (
+    <>
+      <motion.div
+        className="fixed top-0 left-0 w-1.5 h-1.5 bg-white rounded-full pointer-events-none z-[100] hidden lg:block mix-blend-difference"
+        animate={{
+          x: position.x - 3,
+          y: position.y - 3,
+        }}
+        transition={{ type: 'spring', damping: 30, stiffness: 200, mass: 0.1 }}
+      />
+      <motion.div
+        className="fixed top-0 left-0 w-6 h-6 border border-white/40 rounded-full pointer-events-none z-[100] hidden lg:block mix-blend-difference"
+        animate={{
+          x: position.x - 12,
+          y: position.y - 12,
+          scale: isPointer ? 1.5 : 1,
+          borderColor: isPointer ? 'rgba(255,255,255, 0.8)' : 'rgba(255,255,255, 0.4)',
+        }}
+        transition={{ type: 'spring', damping: 25, stiffness: 150, mass: 0.5 }}
+      />
+    </>
+  );
 };
 
 const Preloader = ({ onComplete }: { onComplete: () => void, key?: string }) => {
@@ -593,7 +594,7 @@ const Preloader = ({ onComplete }: { onComplete: () => void, key?: string }) => 
   }, [onComplete]);
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ y: 0 }}
       exit={{ y: "-100%" }}
       transition={{ duration: 1.2, ease: [0.85, 0, 0.15, 1] }}
@@ -606,7 +607,7 @@ const Preloader = ({ onComplete }: { onComplete: () => void, key?: string }) => 
           transition={{ duration: 2.5, ease: "easeInOut" }}
           className="absolute bottom-0 left-0 h-[1px] bg-grey-dark"
         />
-        <motion.h1 
+        <motion.h1
           className="text-2xl md:text-4xl font-display italic text-grey-dark tracking-[0.5em] px-12 py-4 font-bold"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -620,8 +621,8 @@ const Preloader = ({ onComplete }: { onComplete: () => void, key?: string }) => 
 };
 
 const ProductPage = ({ product, onBack, onAddToCart, onToggleWishlist, wishlist, relatedProducts, setSelectedProduct }: { product: Product, onBack: () => void, onAddToCart: (p: Product) => void, onToggleWishlist: (p: Product) => void, wishlist: Product[], relatedProducts: Product[], setSelectedProduct: (p: Product) => void }) => {
-  useEffect(() => { 
-    window.scrollTo(0, 0); 
+  useEffect(() => {
+    window.scrollTo(0, 0);
   }, [product.id]);
 
   const isInWishlist = wishlist.some(p => p.id === product.id);
@@ -649,13 +650,13 @@ const ProductPage = ({ product, onBack, onAddToCart, onToggleWishlist, wishlist,
           </div>
         </div>
       </div>
-      <ProductGrid 
-        id="related-1" 
-        title="Similar Arrivals" 
-        subtitle="The Archive" 
-        products={relatedProducts.slice(0, 8)} 
-        onProductClick={(p) => { setSelectedProduct(p); window.scrollTo(0,0); }} 
-        onAddToCart={onAddToCart} 
+      <ProductGrid
+        id="related-1"
+        title="Similar Arrivals"
+        subtitle="The Archive"
+        products={relatedProducts.slice(0, 8)}
+        onProductClick={(p) => { setSelectedProduct(p); window.scrollTo(0, 0); }}
+        onAddToCart={onAddToCart}
       />
     </motion.div>
   );
@@ -726,7 +727,7 @@ const WishlistDrawer = ({ isOpen, onClose, items, onRemove, onAddToCart }: { isO
   );
 };
 
-export default function App() { 
+export default function App() {
   const [isAdmin, setIsAdmin] = useState(window.location.pathname === "/sdnadmin");
   if (isAdmin) return <SdnAdmin onClose={() => { window.history.pushState({}, "", "/"); setIsAdmin(false); }} />;
 
@@ -782,8 +783,8 @@ export default function App() {
         {!loading && (
           <>
             <CustomCursor />
-            <Navbar 
-              onNavigate={(v) => { setView(v); window.scrollTo(0,0); }} 
+            <Navbar
+              onNavigate={(v) => { setView(v); window.scrollTo(0, 0); }}
               cartCount={cartItems.reduce((acc, item) => acc + item.qty, 0)}
               wishlistCount={wishlist.length}
               onOpenCart={() => setIsCartOpen(true)}
@@ -794,49 +795,55 @@ export default function App() {
                 <>
                   <Hero onNavigate={setView} />
                   <Quote />
-                  <div className="bg-lemon">
-                    <Banners onNavigate={(v, p) => { if(p) { setSelectedProduct(p); setView('product'); } else setView(v); }} />
-                  </div>
-                  <ProductGrid 
-                    id="new-arrivals" 
-                    title="New Arrivals" 
-                    subtitle="The Latest Archive" 
-                    products={dbItems.length > 0 ? dbItems.map(i => ({...i, id: i.id.toString(), img: i.image_url, price: "$" + i.price, description: i.description || "Archive piece.", details: i.details || ["Premium Quality"]})) : [...newArrivals, ...newArrivals]} 
-                    onProductClick={(p) => { setSelectedProduct(p); setView('product'); }}
-                    onAddToCart={handleAddToCart}
-                  />
-                  <ProductGrid 
-                    id="trending" 
-                    title="Most Trending" 
-                    subtitle="Community Favorites" 
-                    products={dbItems.length > 0 ? [...dbItems.map(i => ({...i, img: i.image_url, price: "$" + i.price})), ...trends] : [...trends, ...trends]} 
-                    onProductClick={(p) => { setSelectedProduct(p); setView('product'); }}
-                    onAddToCart={handleAddToCart}
-                  />
+
+                  {/* 1. The Editorial Banners */}
+                  <Banners onNavigate={(v, p) => {
+                    if (p) { setSelectedProduct(p); setView('product'); }
+                    else setView(v);
+                  }} />
+
+                  {/* 2. The Dynamic Sections */}
+                  {siteData.dynamicSections.map((section: any) => {
+                    // Force the correct data based on the section ID
+                    const items = section.id.toLowerCase().includes("trend") ? trends : newArrivals;
+
+                    return (
+                      <ProductGrid
+                        key={section.id}
+                        id={section.id}
+                        title={section.title}
+                        subtitle={section.subtitle}
+                        products={items}
+                        onProductClick={(p) => { setSelectedProduct(p); setView('product'); }}
+                        onAddToCart={handleAddToCart}
+                      />
+                    );
+                  })}
                 </>
               ) : selectedProduct ? (
-                <ProductPage 
-                  product={selectedProduct} 
-                  onBack={() => setView('home')} 
+                <ProductPage
+                  product={selectedProduct}
+                  onBack={() => setView('home')}
                   onAddToCart={handleAddToCart}
                   onToggleWishlist={handleToggleWishlist}
                   wishlist={wishlist}
-                  relatedProducts={ALL_PRODUCTS.filter(p => p.id !== selectedProduct.id)} setSelectedProduct={setSelectedProduct}
+                  relatedProducts={ALL_PRODUCTS.filter(p => p.id !== selectedProduct.id)}
+                  setSelectedProduct={setSelectedProduct}
                 />
               ) : null}
             </main>
             <Footer />
-            <CartDrawer 
-              isOpen={isCartOpen} 
-              onClose={() => setIsCartOpen(false)} 
-              items={cartItems} 
+            <CartDrawer
+              isOpen={isCartOpen}
+              onClose={() => setIsCartOpen(false)}
+              items={cartItems}
               onRemove={(id) => setCartItems(prev => prev.filter(i => i.product.id !== id))}
               onUpdateQty={(id, delta) => setCartItems(prev => prev.map(i => i.product.id === id ? { ...i, qty: Math.max(1, i.qty + delta) } : i))}
             />
-            <WishlistDrawer 
-              isOpen={isWishlistOpen} 
-              onClose={() => setIsWishlistOpen(false)} 
-              items={wishlist} 
+            <WishlistDrawer
+              isOpen={isWishlistOpen}
+              onClose={() => setIsWishlistOpen(false)}
+              items={wishlist}
               onRemove={(id) => setWishlist(prev => prev.filter(p => p.id !== id))}
               onAddToCart={handleAddToCart}
             />
@@ -846,30 +853,3 @@ export default function App() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
