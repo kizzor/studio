@@ -1,10 +1,6 @@
 import SdnAdmin from './sdnadmin';
 import { supabase } from "./supabaseClient";
 import { INITIAL_CONFIG } from './siteConfig';
-/** 
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
 
 import { motion, useScroll, useTransform, AnimatePresence, useInView } from 'motion/react';
 import React, { useRef, useState, useEffect } from 'react';
@@ -20,22 +16,7 @@ interface Product {
   details?: string[];
 }
 
-const ALL_PRODUCTS: Product[] = [
-  { id: '1', category: 'trending', name: "KISHORE KUMAR", price: "$145", img: "https://yxhdjxlakcsntswwxpwr.supabase.co/storage/v1/object/public/product-images/kishore.jpg", description: "A luxurious oversized shirt crafted from 100% pure silk, offering a fluid silhouette and exceptional comfort.", details: ['100% Silk', 'Oversized fit', 'Archive item'] },
-  { id: '2', category: 'trending', name: "Linen Tailored Skirt", price: "$120", img: "https://images.unsplash.com/photo-1583496661160-fb4144f21f82?auto=format&fit=crop&q=80&w=1000", description: "Structured linen skirt with a minimalist profile and refined tailoring." },
-  { id: '3', category: 'trending', name: "Double Breasted Blazer", price: "$320", img: "https://images.unsplash.com/photo-1548883354-94bcfe321cbb?auto=format&fit=crop&q=80&w=1000", description: "Sophisticated double-breasted blazer with sharp tailoring and structured shoulders." },
-  { id: '4', category: 'trending', name: "Boxy Graphic T-Shirt", price: "$65", img: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&q=80&w=1000", description: "Heavyweight cotton t-shirt with a contemporary boxy fit." },
-  { id: '5', category: 'trending', name: "Satin Midi Skirt", price: "$180", img: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&q=80&w=1000", description: "Fluid satin skirt that catches the light with every movement." },
-  { id: '6', category: 'trending', name: "Structural Wool Blazer", price: "$490", img: "https://images.unsplash.com/photo-1539533377285-3422400bc797?auto=format&fit=crop&q=80&w=1000", description: "Architectural blazer featuring clean lines and a premium wool weave." },
-  { id: '7', category: 'new', name: "Poplin Cotton Shirt", price: "$85", img: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&q=80&w=1000", description: "Breathable poplin cotton shirt, an essential piece for any modern wardrobe." },
-  { id: '8', category: 'new', name: "Premium Knit T-Shirt", price: "$90", img: "https://images.unsplash.com/photo-1576566582415-8422400bc797?auto=format&fit=crop&q=80&w=1000", description: "Ultra-soft knit t-shirt with a refined texture and drape." },
-  { id: '9', category: 'new', name: "Linen Summer Blazer", price: "$240", img: "https://images.unsplash.com/photo-1593032465175-481ac7f402a1?auto=format&fit=crop&q=80&w=1000", description: "Lightweight linen blazer, ideal for summer layering and smart-casual events." },
-  { id: '10', category: 'new', name: "Abstract Print Shirt", price: "$130", img: "https://images.unsplash.com/photo-1598961942613-ba8bd741e976?auto=format&fit=crop&q=80&w=1000", description: "Modern shirt featuring a unique abstract print and relaxed collar." },
-  { id: '11', category: 'new', name: "Pleated Midi Skirt", price: "$210", img: "https://images.unsplash.com/photo-1583496661160-fb4144f21f82?auto=format&fit=crop&q=80&w=1000", description: "Timeless pleated skirt with a high-definition structure." },
-  { id: '12', category: 'new', name: "Leather Midi Skirt", price: "$340", img: "https://images.unsplash.com/photo-1548624313-0396c75e4b1a?auto=format&fit=crop&q=80&w=1000", description: "Luxurious leather midi skirt with a clean waist and refined finish." }
-];
-
-const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishlist }: { onNavigate: (v: any) => void, cartCount: number, wishlistCount: number, onOpenCart: () => void, onOpenWishlist: () => void }) => {
+const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishlist, navLinks }: { onNavigate: (v: any) => void, cartCount: number, wishlistCount: number, onOpenCart: () => void, onOpenWishlist: () => void, navLinks: any[] }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -62,14 +43,14 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
           >
             <Menu size={22} strokeWidth={1.5} />
           </button>
-          <div className="hidden lg:flex items-center gap-10 whitespace-nowrap">
-            {['Shop All', 'T-Shirts', 'Denim', 'Archive'].map((item) => (
+          <div className="hidden md:flex space-x-8 text-[10px] tracking-[0.3em] font-medium whitespace-nowrap">
+            {navLinks?.map((link: any, i: number) => (
               <a
-                key={item}
-                href="#"
-                className="text-[11px] uppercase tracking-[0.25em] font-medium text-grey-dark/40 hover:text-grey-dark transition-all hover:tracking-[0.3em]"
+                key={i}
+                href={link.url}
+                className="hover:text-grey-dark/60 transition-colors uppercase"
               >
-                {item}
+                {link.label}
               </a>
             ))}
           </div>
@@ -80,7 +61,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
           style={{ width: 'clamp(140px, 40%, 300px)' }}
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
-          onClick={() => onNavigate('home')}
+          onClick={() => onNavigate('home')} // Assuming 'home' is a valid view state
         >
           <h1 className="text-[10px] md:text-xl lg:text-2xl font-sans font-black tracking-[0.4em] md:tracking-[0.8em] uppercase text-white -mr-[0.4em] md:-mr-[0.8em] text-center truncate">AURHOUSE</h1>
         </motion.div>
@@ -167,16 +148,16 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
                 </button>
               </div>
               <div className="flex flex-col gap-10">
-                {['Shop All', 'Shirts', 'Pants', 'Blazers', 'Gowns'].map((item, idx) => (
+                {navLinks.map((link, idx) => (
                   <motion.a
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 + idx * 0.1 }}
-                    key={item}
-                    href="#"
+                    key={link.label}
+                    href={link.url}
                     className="text-3xl font-sans font-black uppercase hover:translate-x-4 transition-transform duration-500 block"
                   >
-                    {item}
+                    {link.label}
                   </motion.a>
                 ))}
               </div>
@@ -195,7 +176,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
   );
 };
 
-const Hero = ({ onNavigate, title, subtitle, backgroundImage }: { onNavigate?: (v: any) => void, title?: string, subtitle?: string, backgroundImage?: string }) => {
+const Hero = ({ onNavigate, title, subtitle, backgroundImage, buttonText }: { onNavigate: (v: any) => void, title: string, subtitle: string, backgroundImage: string, buttonText: string }) => {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -212,8 +193,8 @@ const Hero = ({ onNavigate, title, subtitle, backgroundImage }: { onNavigate?: (
         style={{ y, scale }}
         className="absolute inset-0 z-0"
       >
-        <img
-          src={backgroundImage || "https://images.unsplash.com/photo-1550246140-5119ae4790b8?auto=format&fit=crop&q=80&w=2000"}
+        <img // Fallback image if backgroundImage is not provided
+          src="https://images.unsplash.com/photo-1550246140-5119ae4790b8?auto=format&fit=crop&q=80&w=2000"
           alt="Hero"
           className="w-full h-full object-cover brightness-[0.7]"
           onLoad={() => console.log('Hero image loaded')}
@@ -231,17 +212,17 @@ const Hero = ({ onNavigate, title, subtitle, backgroundImage }: { onNavigate?: (
           transition={{ duration: 1.5, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
         >
           <span className="text-[9px] uppercase tracking-[0.4em] text-lemon/80 mb-3 block font-bold">{subtitle || "Winter Collection 2026"}</span>
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-sans font-black uppercase leading-none tracking-tighter mb-8 text-lemon">
+          <h2 className="text-6xl md:text-8xl font-sans font-black uppercase leading-none tracking-tighter mb-8 text-lemon">
             {title || "Timeless Redefined."}
           </h2>
           <div className="flex flex-col md:flex-row items-center justify-center gap-6">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => onNavigate?.('home')}
+              onClick={() => onNavigate('home')}
               className="px-8 py-3 bg-transparent border border-lemon text-lemon text-[10px] font-bold uppercase tracking-widest hover:bg-lemon hover:text-grey-dark transition-all duration-300 shadow-lg"
             >
-              Shop Collection
+              {buttonText || "Shop Collection"}
             </motion.button>
             <motion.button
               className="text-[10px] font-bold uppercase tracking-widest border-b border-lemon/30 pb-1 hover:border-lemon transition-colors flex items-center gap-2 text-lemon"
@@ -264,7 +245,7 @@ const Hero = ({ onNavigate, title, subtitle, backgroundImage }: { onNavigate?: (
   );
 };
 
-const Quote = () => {
+const Quote = ({ philosophy }: { philosophy: string }) => {
   return (
     <section className="py-6 px-6 md:px-12 lg:px-24 bg-lemon text-center">
       <motion.div
@@ -274,8 +255,8 @@ const Quote = () => {
         className="max-w-xl mx-auto"
       >
         <span className="text-[7px] md:text-[8px] uppercase tracking-[0.4em] text-grey-dark/30 mb-2 block font-bold">Philosophy</span>
-        <p className="text-base md:text-lg font-sans font-black uppercase leading-tight text-grey-dark italic">
-          "Purity of form is the highest expression of craft."
+        <p className="text-base md:text-lg font-sans font-black uppercase leading-tight text-grey-dark italic"> {/* Default philosophy */}
+          "{philosophy}"
         </p>
         <div className="w-6 h-px bg-grey-dark/10 mx-auto mt-3" />
       </motion.div>
@@ -283,21 +264,20 @@ const Quote = () => {
   );
 };
 
-const Banners = ({ onNavigate }: { onNavigate: (v: any, p?: Product) => void }) => {
+const Banners = ({ onNavigate, banners_config }: { onNavigate: (v: any, p?: Product) => void, banners_config: any[] }) => {
   return (
     <section className="px-6 md:px-12 lg:px-24 pb-12">
       <div className="max-w-screen-xl mx-auto grid grid-cols-2 gap-0 overflow-hidden">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          whileTap={{ scale: 0.98 }}
+          whileTap={{ scale: 0.98 }} // Removed onClick for now, as ALL_PRODUCTS is removed
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
-          className="relative h-[70vh] md:h-[90vh] overflow-hidden group cursor-pointer shadow-sm"
-          onClick={() => onNavigate('product', ALL_PRODUCTS[0])}
+          className="relative h-[70vh] md:h-[90vh] overflow-hidden group cursor-pointer shadow-sm" // Removed onClick for now, as ALL_PRODUCTS is removed
         >
           <img
-            src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=1200"
+            src={banners_config[0]?.img || "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=1200"}
             alt="Trending Editorial 1"
             className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
           />
@@ -315,14 +295,13 @@ const Banners = ({ onNavigate }: { onNavigate: (v: any, p?: Product) => void }) 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          whileTap={{ scale: 0.98 }}
+          whileTap={{ scale: 0.98 }} // Removed onClick for now, as ALL_PRODUCTS is removed
           transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
-          className="relative h-[70vh] md:h-[90vh] overflow-hidden group cursor-pointer shadow-sm"
-          onClick={() => onNavigate('product', ALL_PRODUCTS[2])}
+          className="relative h-[70vh] md:h-[90vh] overflow-hidden group cursor-pointer shadow-sm" // Removed onClick for now, as ALL_PRODUCTS is removed
         >
           <img
-            src="https://images.unsplash.com/photo-1534030347209-467a5b0ad3e6?auto=format&fit=crop&q=80&w=1200"
+            src={banners_config[1]?.img || "https://images.unsplash.com/photo-1534030347209-467a5b0ad3e6?auto=format&fit=crop&q=80&w=1200"}
             alt="Trending Editorial 2"
             className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
           />
@@ -445,14 +424,15 @@ const ProductGrid = ({ title, products, subtitle, id, onProductClick, onAddToCar
               onClick={() => !isDragging && onProductClick(product)}
               className="min-w-[150px] md:min-w-[210px] lg:min-w-[250px] snap-start group/card cursor-pointer"
             >
-              <div className="aspect-[3/4] overflow-hidden mb-4 relative bg-[#f9f9f7] shadow-sm border border-grey-dark/5 p-8 flex items-center justify-center">
+              <div className="aspect-[3/4] w-full overflow-hidden mb-4 relative bg-[#f9f9f7] shadow-sm border border-grey-dark/5 flex items-center justify-center">
                 <img
-                  src={product.img}
+                  src={product.image_url || product.img || "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1000"}
                   alt={product.name}
-                  className="w-full h-full object-contain transition-all duration-1000 group-hover/card:scale-105 pointer-events-none"
+                  // FIX: added structural layout sizing block classes 'absolute inset-0 h-full w-full object-cover'
+                  className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 group-hover/card:scale-105 pointer-events-none"
                 />
                 <div className="absolute inset-0 bg-lemon/5 group-hover/card:bg-transparent transition-colors shadow-inner" />
-                <div className="absolute top-4 right-4 md:top-6 md:right-6 translate-y-[-10px] opacity-0 group-hover/card:translate-y-0 group-hover/card:opacity-100 transition-all duration-500">
+                <div className="absolute top-4 right-4 md:top-6 md:right-6 translate-y-[-10px] opacity-0 group-hover/card:translate-y-0 group-hover/card:opacity-100 transition-all duration-500 z-10">
                   <button
                     onClick={(e) => { e.stopPropagation(); onAddToCart(product); }}
                     className="border border-white/50 text-white bg-transparent backdrop-blur-md px-4 py-1 text-[8px] uppercase font-bold tracking-widest hover:bg-white hover:text-grey-dark transition-all"
@@ -460,7 +440,8 @@ const ProductGrid = ({ title, products, subtitle, id, onProductClick, onAddToCar
                     Add
                   </button>
                 </div>
-              </div>                             <div className="flex flex-col gap-2 pl-1">
+              </div>
+              <div className="flex flex-col gap-2 pl-1">
                 <div className="flex justify-between items-start">
                   <h4 className="text-[9px] uppercase tracking-[0.2em] font-black text-grey-dark">{product.name}</h4>
                   <span className="text-[9px] text-grey-dark/40 font-mono tracking-tighter">{product.price}</span>
@@ -501,14 +482,14 @@ const ProductGrid = ({ title, products, subtitle, id, onProductClick, onAddToCar
   );
 };
 
-const Footer = () => {
+const Footer = ({ brand }: { brand: { name: string, description: string } }) => {
   return (
     <footer className="pt-24 pb-12 px-6 md:px-12 lg:px-24 border-t border-grey-dark/5 bg-lemon text-grey-dark">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-24">
         <div className="md:col-span-2">
-          <h2 className="text-3xl font-sans font-black tracking-widest uppercase">AURHOUSE</h2>
+          <h2 className="text-3xl font-sans font-black tracking-widest uppercase">{brand?.name || "AURHOUSE"}</h2>
           <p className="text-grey-dark/50 text-sm max-w-sm mb-8 leading-relaxed font-medium">
-            Reimaging the modern wardrobe through an essentialist lens. Our focus remains on shirts, tailored blazers, and silhouettes that endure.
+            {brand?.description || "Reimaging the modern wardrobe through an essentialist lens. Our focus remains on shirts, tailored blazers, and silhouettes that endure."}
           </p>
           <div className="flex gap-6">
             <Instagram className="text-grey-dark/40 hover:text-grey-dark cursor-pointer transition-colors" size={20} strokeWidth={1.5} />
@@ -620,10 +601,37 @@ const Preloader = ({ onComplete }: { onComplete: () => void, key?: string }) => 
   );
 };
 
-const ProductPage = ({ product, onBack, onAddToCart, onToggleWishlist, wishlist, relatedProducts, setSelectedProduct }: { product: Product, onBack: () => void, onAddToCart: (p: Product) => void, onToggleWishlist: (p: Product) => void, wishlist: Product[], relatedProducts: Product[], setSelectedProduct: (p: Product) => void }) => {
+const ProductPage = ({
+  product,
+  onBack,
+  onAddToCart,
+  onToggleWishlist,
+  wishlist,
+  relatedProducts,
+  setSelectedProduct
+}: {
+  product: any,
+  onBack: () => void,
+  onAddToCart: (p: any) => void,
+  onToggleWishlist: (p: any) => void,
+  wishlist: any[],
+  relatedProducts: any[],
+  setSelectedProduct: (p: any) => void
+}) => {
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [product.id]);
+
+  // FIX 1: Local state engine to change image views instantly based on selected colorways
+  const [activePreviewImage, setActivePreviewImage] = useState(product.img || product.image_url);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+
+  // Sync active preview image if the underlying product changes
+  useEffect(() => {
+    setActivePreviewImage(product.img || product.image_url);
+    setSelectedSize(null);
+  }, [product]);
 
   const isInWishlist = wishlist.some(p => p.id === product.id);
 
@@ -632,29 +640,96 @@ const ProductPage = ({ product, onBack, onAddToCart, onToggleWishlist, wishlist,
       <button onClick={onBack} className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest mb-12 text-grey-dark/40 hover:text-grey-dark">
         <ArrowLeft size={14} /> Back to Archive
       </button>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-        <div className="aspect-[3/4] bg-white border border-grey-dark/5 overflow-hidden shadow-xl border border-grey-dark/5 p-12 flex items-center justify-center">
-          <img src={product.img} alt={product.name} className="w-full h-full object-contain" />
+        {/* Dynamic Image Canvas Box Frame Viewport */}
+        <div className="aspect-[3/4] bg-white border border-grey-dark/5 overflow-hidden shadow-xl p-12 flex items-center justify-center relative">
+          <img
+            src={activePreviewImage || "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1000"}
+            alt={product.name}
+            className="w-full h-full object-contain transition-all duration-500"
+          />
         </div>
-        <div className="space-y-10">
+
+        {/* Product Meta Detail Sheet Columns */}
+        <div className="space-y-8">
           <div>
-            <h1 className="text-4xl md:text-5xl font-sans font-black uppercase mb-4">{product.name}</h1>
-            <p className="text-2xl font-mono text-grey-dark/60">{product.price}</p>
+            <h1 className="text-4xl md:text-5xl font-sans font-black uppercase mb-4 text-grey-dark tracking-tight">{product.name}</h1>
+            <p className="text-2xl font-mono text-grey-dark/60">₹{product.price}</p>
           </div>
-          <p className="text-sm leading-relaxed text-grey-dark/60">{product.description || "Archive piece."}</p>
-          <div className="flex flex-col gap-4">
-            <button onClick={() => onAddToCart(product)} className="w-full py-5 bg-grey-dark text-lemon text-[10px] uppercase font-black tracking-widest shadow-lg hover:bg-black transition-colors">Add to Cart</button>
-            <button onClick={() => onToggleWishlist(product)} className="w-full py-4 border border-grey-dark text-[10px] uppercase font-black tracking-widest flex items-center justify-center gap-2 hover:bg-grey-dark/5 transition-colors">
+
+          {/* FIX 2: RUNWAY SPECIFIC CRITICAL WARNING STRIP BANNER */}
+          {product.warning_text && (
+            <div className="bg-grey-dark text-lemon p-4 text-[9px] font-mono font-black tracking-widest leading-relaxed flex items-center gap-2">
+              <span>⚡ {product.warning_text}</span>
+            </div>
+          )}
+
+          <p className="text-xs leading-relaxed text-grey-dark/70 font-medium">{product.description || "Curated archival item blueprint piece entries."}</p>
+
+          {/* FIX 3: COLORWAYS SELECTION NODES MAPPER */}
+          {product.colors && product.colors.length > 0 && (
+            <div className="space-y-3">
+              <span className="text-[9px] uppercase tracking-[0.3em] font-black text-grey-dark/40 block">Select Colorway</span>
+              <div className="flex flex-wrap gap-2">
+                {product.colors.map((color: any, idx: number) => (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      if (color.img) setActivePreviewImage(color.img);
+                    }}
+                    className="px-4 py-2 text-[9px] font-bold uppercase tracking-widest bg-white text-grey-dark border border-grey-dark/10 hover:border-grey-dark transition-all duration-300 rounded-none shadow-sm"
+                  >
+                    {color.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* FIX 4: SIZES BUTTON ELEMENT ARRAY TOKENS LIST MAPPER */}
+          {product.sizes && product.sizes.length > 0 && (
+            <div className="space-y-3">
+              <span className="text-[9px] uppercase tracking-[0.3em] font-black text-grey-dark/40 block">Select Fit Matrix</span>
+              <div className="flex flex-wrap gap-3">
+                {product.sizes.map((size: string) => (
+                  <button
+                    key={size}
+                    onClick={() => setSelectedSize(size)}
+                    className={`w-10 h-10 text-[10px] font-black tracking-widest border transition-all duration-300 font-mono ${selectedSize === size
+                        ? 'bg-grey-dark text-lemon border-grey-dark'
+                        : 'bg-white text-grey-dark border-grey-dark/10 hover:border-grey-dark'
+                      }`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-col gap-4 pt-4">
+            <button
+              onClick={() => onAddToCart({ ...product, selectedSize })}
+              className="w-full py-5 bg-grey-dark text-lemon text-[10px] uppercase font-black tracking-widest shadow-lg hover:bg-black transition-colors"
+            >
+              Add to Cart {selectedSize ? `(${selectedSize})` : ''}
+            </button>
+            <button
+              onClick={() => onToggleWishlist(product)}
+              className="w-full py-4 border border-grey-dark text-[10px] uppercase font-black tracking-widest flex items-center justify-center gap-2 hover:bg-grey-dark/5 transition-colors"
+            >
               <Heart size={14} fill={isInWishlist ? "black" : "none"} /> {isInWishlist ? "In Wishlist" : "Add to Wishlist"}
             </button>
           </div>
         </div>
       </div>
+
       <ProductGrid
         id="related-1"
         title="Similar Arrivals"
         subtitle="The Archive"
-        products={relatedProducts.slice(0, 8)}
+        products={relatedProducts}
         onProductClick={(p) => { setSelectedProduct(p); window.scrollTo(0, 0); }}
         onAddToCart={onAddToCart}
       />
@@ -731,53 +806,47 @@ export default function App() {
   const [isAdmin, setIsAdmin] = useState(window.location.pathname === "/sdnadmin");
   if (isAdmin) return <SdnAdmin onClose={() => { window.history.pushState({}, "", "/"); setIsAdmin(false); }} />;
 
-  const [dbItems, setDbItems] = React.useState([]);
-  // 1. Initialize with a blank structure so it doesn't crash while loading
+  // 1. UPDATE STATE HOOKS AT THE TOP OF YOUR APP COMPONENT
   const [siteData, setSiteData] = useState({
-    dynamicSections: [],
-    hero_config: {},
-    quote_config: { text: "" },
-    banners_config: []
+    hero: { title: 'AURHOUSE', subtitle: 'COLLECTION 2026' },
+    quote: { text: '' },
+    banners: [],
+    sections: [], // Will deeply store dynamic_sections along with their internal products arrays
+    navigation_links: [],
+    brand: INITIAL_CONFIG.brand
   });
+  const [loading, setLoading] = useState(true);
+  const [view, setView] = useState<'home' | 'product'>('home');
+  const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
 
+  // 2. REFIT THE MASTER SYNC EFFECT HOOK
   useEffect(() => {
-    const loadDNA = async () => {
-      // 1. Fetch Config
-      const { data: config, error: configError } = await supabase
+    const syncDatabaseDNA = async () => {
+      const { data, error } = await supabase
         .from('site_config')
         .select('*')
+        .eq('id', 1)
         .single();
 
-      if (config && !configError) {
+      if (data && !error) {
         setSiteData({
-          dynamicSections: config.dynamic_sections || [],
-          hero_config: config.hero_config || {},
-          quote_config: config.quote_config || {},
-          banners_config: config.banners_config || []
+          hero: data.hero_config || { title: 'AURHOUSE', subtitle: 'COLLECTION 2026' },
+          quote: data.quote_config || { text: '' },
+          banners: data.banners_config || [],
+          sections: data.dynamic_sections || [], // Maps straight to your admin panel mutations
+          navigation_links: data.navigation_links || [],
+          brand: data.brand_config || INITIAL_CONFIG.brand
         });
-      } else if (configError) {
-        console.error("Error fetching site config:", configError);
       }
-      // 2. Fetch Products
-      const { data: products } = await supabase.from('products').select('*');
-      if (products) setDbItems(products);
+      setLoading(false);
     };
-    loadDNA();
+    syncDatabaseDNA();
   }, []);
 
-  const [loading, setLoading] = useState(true); // Keep this for the Preloader
-  const [view, setView] = useState<'home' | 'product'>('home');
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cartItems, setCartItems] = useState<{ product: Product, qty: number }[]>([]);
   const [wishlist, setWishlist] = useState<Product[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
-
-  useEffect(() => {
-    // This useEffect is for the preloader, not data fetching.
-    const timer = setTimeout(() => setLoading(false), 5000);
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleAddToCart = (product: Product) => {
     setCartItems(prev => {
@@ -795,8 +864,12 @@ export default function App() {
     });
   };
 
-  const trends = ALL_PRODUCTS.filter(p => p.category === 'trending');
-  const newArrivals = ALL_PRODUCTS.filter(p => p.category === 'new');
+  const ALL_PRODUCTS_FROM_DB: Product[] = siteData.sections.flatMap((s: any) =>
+    (s.products || []).map((p: any) => ({
+      ...p,
+      category: p.category || s.title
+    }))
+  );
 
   return (
     <div className="font-sans bg-lemon min-h-screen text-grey-dark">
@@ -811,58 +884,43 @@ export default function App() {
           <>
             <CustomCursor />
             <Navbar
-              onNavigate={(v) => { setView(v); window.scrollTo(0, 0); }} // Assuming Navbar doesn't need siteData directly
+              onNavigate={(v) => { setView(v); window.scrollTo(0, 0); }}
               cartCount={cartItems.reduce((acc, item) => acc + item.qty, 0)}
               wishlistCount={wishlist.length}
               onOpenCart={() => setIsCartOpen(true)}
               onOpenWishlist={() => setIsWishlistOpen(true)}
+              navLinks={siteData.navigation_links}
             />
             <main>
               {view === 'home' ? (
                 <>
                   <Hero
-                    title={siteData.hero_config?.title}
-                    subtitle={siteData.hero_config?.subtitle}
-                    backgroundImage={siteData.hero_config?.image_url}
+                    onNavigate={setView}
+                    title={siteData.hero?.title || INITIAL_CONFIG.hero.title}
+                    subtitle={siteData.hero?.subtitle || INITIAL_CONFIG.hero.subtitle}
+                    backgroundImage={siteData.hero?.image_url || INITIAL_CONFIG.hero.image_url}
+                    buttonText={(siteData.hero as any)?.buttonText || INITIAL_CONFIG.hero.buttonText}
                   />
-                  <section className="py-24 px-6 border-b border-white/10 text-center">
-                    <span className="text-[10px] tracking-[0.3em] text-white/30 mb-8 block uppercase">Philosophy</span>
-                    <h2 className="text-3xl md:text-5xl font-light italic max-w-4xl mx-auto leading-tight tracking-tight">
-                      "{siteData.quote_config?.text || "Purity of form is the highest expression of craft."}"
-                    </h2>
-                  </section>
-
-                  {/* 1. The Editorial Banners */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 border-b border-white/10">
-                    {siteData.banners_config?.map((banner: any, i: number) => (
-                      <div key={i} className={`aspect-[4/5] relative group overflow-hidden ${i === 0 ? 'border-r border-white/10' : ''}`}>
-                        <img
-                          src={banner.img}
-                          className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
-                        />
-                        <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
-                      </div>
-                    ))}
+                  <Quote philosophy={siteData.quote?.text || INITIAL_CONFIG.brand.philosophy} />
+                  <div className="bg-lemon">
+                    <Banners
+                      onNavigate={(v, p) => { if (p) { setSelectedProduct(p); setView('product'); } else setView(v); }}
+                      banners_config={siteData.banners}
+                    />
                   </div>
-
-                  {/* 2. The Dynamic Sections */}
-                  {siteData.dynamicSections && siteData.dynamicSections.length > 0 ? (
-                    siteData.dynamicSections.map((section: any) => (
-                      <ProductGrid
-                        key={section.id}
-                        id={section.id}
-                        title={section.title}
-                        subtitle={section.subtitle}
-                        products={section.id.toLowerCase().includes("trend") ? trends : newArrivals}
-                        onProductClick={(p) => { setSelectedProduct(p); setView('product'); }}
-                        onAddToCart={handleAddToCart}
-                      />
-                    ))
-                  ) : (
-                    <div className="py-20 text-center opacity-20 uppercase tracking-[0.5em] text-[10px]">
-                      Initializing_Archive_DNA...
-                    </div>
-                  )}
+                  {/* 3. REFIT YOUR MAIN LAYOUT MAIN BLOCK WITHIN THE RETURN STATEMENT */}
+                  {siteData.sections.map((section: any) => (
+                    <ProductGrid
+                      key={section.id}
+                      id={section.id}
+                      title={section.title}
+                      subtitle={section.subtitle}
+                      // Deeply feeds your newly customized nested elements directly into the display grid
+                      products={section.products || []}
+                      onProductClick={(p) => { setSelectedProduct(p); setView('product'); }}
+                      onAddToCart={handleAddToCart}
+                    />
+                  ))}
                 </>
               ) : selectedProduct ? (
                 <ProductPage
@@ -871,13 +929,12 @@ export default function App() {
                   onAddToCart={handleAddToCart}
                   onToggleWishlist={handleToggleWishlist}
                   wishlist={wishlist}
-                  relatedProducts={ALL_PRODUCTS.filter(p => p.id !== selectedProduct.id)}
+                  relatedProducts={ALL_PRODUCTS_FROM_DB.filter(p => p.id !== selectedProduct.id)}
                   setSelectedProduct={setSelectedProduct}
                 />
               ) : null}
             </main>
-            {/* Footer will also need to be updated to use siteData.brand.description */}
-            <Footer />
+            <Footer brand={siteData.brand} />
             <CartDrawer
               isOpen={isCartOpen}
               onClose={() => setIsCartOpen(false)}
