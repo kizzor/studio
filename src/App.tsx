@@ -1,6 +1,7 @@
 import SdnAdmin from './sdnadmin';
 import { supabase } from "./supabaseClient";
 import { INITIAL_CONFIG } from './siteConfig';
+import { woocommerce } from "./woocommerceClient";
 
 import { motion, useScroll, useTransform, AnimatePresence, useInView } from 'motion/react';
 import React, { useRef, useState, useEffect } from 'react';
@@ -13,6 +14,8 @@ interface Product {
   img: string;
   description: string;
   category: string;
+  image_url?: string;
+  warning_text?: string;
   details?: string[];
 }
 
@@ -384,7 +387,7 @@ const ProductGrid = ({ title, products, subtitle, id, onProductClick, onAddToCar
       </div>
 
       <div className="relative px-6 md:px-12 lg:px-24">
-        {/* Horizontal Navigation Buttons - Vertical Rectangle Style centered to images */}
+        {/* Horizontal Navigation Buttons */}
         <div className="absolute top-[40%] -translate-y-1/2 left-0 z-30 opacity-0 group-hover/section:opacity-100 transition-opacity duration-500">
           <button
             onClick={() => scroll('left')}
@@ -410,7 +413,7 @@ const ProductGrid = ({ title, products, subtitle, id, onProductClick, onAddToCar
           onMouseLeave={handleMouseLeave}
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
-          className="flex gap-6 md:gap-8 lg:gap-10 overflow-x-auto pb-16 no-scrollbar snap-x snap-mandatory cursor-grab active:cursor-grabbing select-none"
+          className="flex flex-nowrap gap-6 md:gap-8 lg:gap-10 overflow-x-auto pb-16 no-scrollbar snap-x snap-mandatory cursor-grab active:cursor-grabbing select-none max-w-full"
           style={{ scrollBehavior: isDragging ? 'auto' : 'smooth' }}
         >
           {products.map((product, idx) => (
@@ -422,13 +425,13 @@ const ProductGrid = ({ title, products, subtitle, id, onProductClick, onAddToCar
               transition={{ duration: 0.6, delay: idx * 0.05, ease: [0.16, 1, 0.3, 1] }}
               viewport={{ once: false, amount: 0.1 }}
               onClick={() => !isDragging && onProductClick(product)}
-              className="min-w-[150px] md:min-w-[210px] lg:min-w-[250px] snap-start group/card cursor-pointer"
+              // FIXED LAYOUT DIMENSIONS: Explicit width constraints to force elegant side-by-side catalog rows
+              className="w-[200px] sm:w-[240px] md:w-[280px] lg:w-[320px] shrink-0 snap-start group/card cursor-pointer"
             >
               <div className="aspect-[3/4] w-full overflow-hidden mb-4 relative bg-[#f9f9f7] shadow-sm border border-grey-dark/5 flex items-center justify-center">
                 <img
                   src={product.image_url || product.img || "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1000"}
                   alt={product.name}
-                  // FIX: added structural layout sizing block classes 'absolute inset-0 h-full w-full object-cover'
                   className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 group-hover/card:scale-105 pointer-events-none"
                 />
                 <div className="absolute inset-0 bg-lemon/5 group-hover/card:bg-transparent transition-colors shadow-inner" />
@@ -443,15 +446,15 @@ const ProductGrid = ({ title, products, subtitle, id, onProductClick, onAddToCar
               </div>
               <div className="flex flex-col gap-2 pl-1">
                 <div className="flex justify-between items-start">
-                  <h4 className="text-[9px] uppercase tracking-[0.2em] font-black text-grey-dark">{product.name}</h4>
-                  <span className="text-[9px] text-grey-dark/40 font-mono tracking-tighter">{product.price}</span>
+                  <h4 className="text-[9px] uppercase tracking-[0.2em] font-black text-grey-dark truncate max-w-[70%]">{product.name}</h4>
+                  <span className="text-[9px] text-grey-dark/40 font-mono tracking-tighter whitespace-nowrap">{product.price}</span>
                 </div>
                 <p className="text-[8px] text-grey-dark/30 uppercase tracking-widest font-medium">Fine Archive Piece</p>
               </div>
             </motion.div>
           ))}
           {/* Spacer for scroll-end padding */}
-          <div className="min-w-[1.5rem] md:min-w-[3rem] lg:min-w-[6rem] h-1" aria-hidden="true" />
+          <div className="min-w-[1.5rem] md:min-w-[3rem] lg:min-w-[6rem] h-1 aria-hidden=true" />
         </div>
 
         {/* Denim Strip Effect (Progress Indicator) */}
@@ -697,8 +700,8 @@ const ProductPage = ({
                     key={size}
                     onClick={() => setSelectedSize(size)}
                     className={`w-10 h-10 text-[10px] font-black tracking-widest border transition-all duration-300 font-mono ${selectedSize === size
-                        ? 'bg-grey-dark text-lemon border-grey-dark'
-                        : 'bg-white text-grey-dark border-grey-dark/10 hover:border-grey-dark'
+                      ? 'bg-grey-dark text-lemon border-grey-dark'
+                      : 'bg-white text-grey-dark border-grey-dark/10 hover:border-grey-dark'
                       }`}
                   >
                     {size}
@@ -806,12 +809,11 @@ export default function App() {
   const [isAdmin, setIsAdmin] = useState(window.location.pathname === "/sdnadmin");
   if (isAdmin) return <SdnAdmin onClose={() => { window.history.pushState({}, "", "/"); setIsAdmin(false); }} />;
 
-  // 1. UPDATE STATE HOOKS AT THE TOP OF YOUR APP COMPONENT
   const [siteData, setSiteData] = useState({
     hero: { title: 'AURHOUSE', subtitle: 'COLLECTION 2026' },
     quote: { text: '' },
     banners: [],
-    sections: [], // Will deeply store dynamic_sections along with their internal products arrays
+    sections: [],
     navigation_links: [],
     brand: INITIAL_CONFIG.brand
   });
@@ -819,27 +821,76 @@ export default function App() {
   const [view, setView] = useState<'home' | 'product'>('home');
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
 
-  // 2. REFIT THE MASTER SYNC EFFECT HOOK
+  // MASTER SYNC ENGINE: Combines Supabase layout grids with live WooCommerce products array
   useEffect(() => {
     const syncDatabaseDNA = async () => {
-      const { data, error } = await supabase
-        .from('site_config')
-        .select('*')
-        .eq('id', 1)
-        .single();
+      try {
+        // 1. Fetch structural layout grids from Supabase
+        const { data: configData, error } = await supabase
+          .from('site_config')
+          .select('*')
+          .eq('id', 1)
+          .single();
 
-      if (data && !error) {
-        setSiteData({
-          hero: data.hero_config || { title: 'AURHOUSE', subtitle: 'COLLECTION 2026' },
-          quote: data.quote_config || { text: '' },
-          banners: data.banners_config || [],
-          sections: data.dynamic_sections || [], // Maps straight to your admin panel mutations
-          navigation_links: data.navigation_links || [],
-          brand: data.brand_config || INITIAL_CONFIG.brand
+        let rawSections = configData?.dynamic_sections || [];
+
+        // 2. Fetch live inventory streams from your local WooCommerce server
+        const wooResponse = await woocommerce.get("products");
+        const liveWooProducts = wooResponse.data || [];
+
+        // 3. Normalize backend data to match your frontend component contracts
+        const mappedWooProducts = liveWooProducts.map((p: any) => {
+          // Fallback image check
+          const productImg = p.images && p.images.length > 0 && p.images[0].src
+            ? p.images[0].src
+            : "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1000";
+
+          return {
+            id: String(p.id),
+            name: p.name,
+            price: p.sale_price ? `₹${p.sale_price}` : `₹${p.price || p.regular_price || '0'}`,
+            img: productImg,        // Feeds components expecting .img
+            image_url: productImg,  // Feeds components expecting .image_url
+            description: p.short_description?.replace(/<[^>]*>/g, '') || p.description?.replace(/<[^>]*>/g, '') || "",
+            category: p.categories?.[0]?.name || "Essentials",
+            sizes: ["S", "M", "L", "XL"]
+          };
         });
+
+        // 4. Force inject live products into sections regardless of strict backend categorization match rules
+        let updatedSections = rawSections.map((section: any) => {
+          return {
+            ...section,
+            products: mappedWooProducts // Injects our live hoodie into every dynamic section row cleanly
+          };
+        });
+
+        // Fallback: If your database dashboard layout array is entirely clean or unconfigured
+        if (updatedSections.length === 0) {
+          updatedSections = [{
+            id: "essential-archive",
+            title: "ESSENTIAL ARCHIVE",
+            subtitle: "Live Backend Inventory",
+            products: mappedWooProducts
+          }];
+        }
+
+        setSiteData({
+          hero: configData?.hero_config || { title: 'AURHOUSE', subtitle: 'COLLECTION 2026' },
+          quote: configData?.quote_config || { text: 'Reimagining the modern wardrobe through an essentialist lens.' },
+          banners: configData?.banners_config || [],
+          sections: updatedSections,
+          navigation_links: configData?.navigation_links || [{ label: "Archive", url: "#" }],
+          brand: configData?.brand_config || INITIAL_CONFIG.brand
+        });
+
+      } catch (err) {
+        console.error("❌ Failed to bundle architectural sync configurations:", err);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
+
     syncDatabaseDNA();
   }, []);
 
@@ -864,12 +915,15 @@ export default function App() {
     });
   };
 
-  const ALL_PRODUCTS_FROM_DB: Product[] = siteData.sections.flatMap((s: any) =>
-    (s.products || []).map((p: any) => ({
-      ...p,
-      category: p.category || s.title
-    }))
-  );
+  const ALL_PRODUCTS_FROM_DB: Product[] = siteData.sections.length > 0
+    ? siteData.sections.flatMap((s: any) =>
+      (s.products || []).map((p: any) => ({
+        ...p,
+        category: p.category || s.title,
+        image_url: p.image_url || p.img
+      }))
+    )
+    : siteData.sections[0]?.products || []; // Fallback to baseline mapping reference
 
   return (
     <div className="font-sans bg-lemon min-h-screen text-grey-dark">
@@ -909,18 +963,35 @@ export default function App() {
                     />
                   </div>
                   {/* 3. REFIT YOUR MAIN LAYOUT MAIN BLOCK WITHIN THE RETURN STATEMENT */}
-                  {siteData.sections.map((section: any) => (
+                  {siteData.sections.map((section: any, idx: number) => {
+                    // Fail-safe assignment ensuring components receive structured tracking attributes
+                    const safeSectionId = section.id || `dynamic-section-${idx}`;
+
+                    return (
+                      <ProductGrid
+                        key={safeSectionId}
+                        id={safeSectionId}
+                        title={section.title || "Collection Archive"}
+                        subtitle={section.subtitle || "New Arrivals"}
+                        // Deeply feeds your newly customized nested elements directly into the display grid
+                        products={section.products || []}
+                        onProductClick={(p) => { setSelectedProduct(p); setView('product'); }}
+                        onAddToCart={handleAddToCart}
+                      />
+                    );
+                  })}
+
+                  {/* FORCE BACKUP GRID: Renders live inventory directly if sections are empty */}
+                  {siteData.sections.length === 0 && ALL_PRODUCTS_FROM_DB.length > 0 && (
                     <ProductGrid
-                      key={section.id}
-                      id={section.id}
-                      title={section.title}
-                      subtitle={section.subtitle}
-                      // Deeply feeds your newly customized nested elements directly into the display grid
-                      products={section.products || []}
+                      id="forced-essential-archive"
+                      title="ESSENTIAL ARCHIVE"
+                      subtitle="Live Backend Inventory"
+                      products={ALL_PRODUCTS_FROM_DB}
                       onProductClick={(p) => { setSelectedProduct(p); setView('product'); }}
                       onAddToCart={handleAddToCart}
                     />
-                  ))}
+                  )}
                 </>
               ) : selectedProduct ? (
                 <ProductPage
