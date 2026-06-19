@@ -1,0 +1,21 @@
+{
+    "brand": {
+        "name": "CLIENT B",
+        "description": "A different brand description for the multi-client template showing dynamic loading.",
+        "philosophy": "DESIGN IS HOW IT WORKS."
+    },
+    "hero": {
+        "title": "MODERN ARCHIVE.",
+        "subtitle": "SUMMER 2026",
+        "image_url": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2000",
+        "buttonText": "EXPLORE"
+    },
+    "banners": [
+        {
+            "img": "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=1200"
+        },
+        {
+            "img": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1200"
+        }
+    ]
+}
