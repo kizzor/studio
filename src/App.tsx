@@ -2,6 +2,7 @@ import SdnAdmin from './sdnadmin';
 import { supabase } from "./supabaseClient";
 import { INITIAL_CONFIG } from './siteConfig';
 import { woocommerce } from "./woocommerceClient";
+import { HeroSlider } from './src/components/HeroSlider';
 
 import { motion, useScroll, useTransform, AnimatePresence, useInView } from 'motion/react';
 import React, { useRef, useState, useEffect } from 'react';
@@ -1176,14 +1177,11 @@ export default function App() {
             <main>
               {view === 'home' ? (
                 <>
-                  <Hero
-                    onNavigate={setView}
-                    title={siteData.hero?.title || INITIAL_CONFIG.hero.title}
-                    subtitle={siteData.hero?.subtitle || INITIAL_CONFIG.hero.subtitle}
-                    backgroundImage={siteData.hero?.image_url || INITIAL_CONFIG.hero.image_url}
-                    buttonText={(siteData.hero as any)?.buttonText || INITIAL_CONFIG.hero.buttonText}
-                  />
-                  <Quote philosophy={siteData.quote?.text || INITIAL_CONFIG.brand.philosophy} />
+                  <HeroSlider />
+                  <div id="hero-quote">
+                    <Quote philosophy={siteData.quote?.text || INITIAL_CONFIG.brand.philosophy} />
+                  </div>
+
                   <div className="bg-lemon">
                     <Banners
                       onNavigate={(v, p) => { if (p) { setSelectedProduct(p); setView('product'); } else setView(v); }}
