@@ -7,9 +7,11 @@ const oauth = new OAuth({
         key: 'ck_89d2a37e86e45edb02f29dda9b2c4c3e0df4de8b', // Paste your real ck_ key here
         secret: 'cs_dded11839739a23ef4fd2dee0b4ea77c8bc2a5e6', // Paste your real cs_ key here
     },
-    signature_method: 'HMAC-SHA256',
+    // WooCommerce OAuth 1.0a is most commonly verified using HMAC-SHA1.
+    // Using SHA256 here frequently causes signature mismatch (401/403).
+    signature_method: 'HMAC-SHA1',
     hash_function(base_string, key) {
-        return CryptoJS.HmacSHA256(base_string, key).toString(CryptoJS.enc.Base64);
+        return CryptoJS.HmacSHA1(base_string, key).toString(CryptoJS.enc.Base64);
     },
 });
 
@@ -20,13 +22,19 @@ export const woocommerce = {
         const url = `${BASE_URL}/${endpoint}`;
         const requestData = { url, method: 'GET' };
 
-        // Generate secure authorization headers
-        const authAndParams = oauth.authorize(requestData);
-        const urlParams = new URLSearchParams(authAndParams as any).toString();
+        // WooCommerce expects OAuth parameters either as an Authorization header
+        // or in a very specific format. Header-signing is the most compatible.
+        const auth = oauth.authorize(requestData);
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                Authorization: oauth.toHeader(auth).Authorization,
+            },
+        });
 
-        const response = await fetch(`${url}?${urlParams}`);
         if (!response.ok) {
-            throw new Error(`WooCommerce API Error: ${response.statusText}`);
+            const text = await response.text().catch(() => '');
+            throw new Error(`WooCommerce API Error: ${response.status} ${response.statusText} :: ${text}`);
         }
 
         const data = await response.json();
