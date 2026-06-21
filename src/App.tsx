@@ -71,6 +71,19 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
           >
             <Menu size={22} strokeWidth={1.5} />
           </button>
+
+          {/* Mobile: Search icon next to AURHOUSE */}
+          <div className="lg:hidden flex items-center gap-4">
+            <button
+              onClick={() => setIsSearchOpen(true)}
+              className="text-grey-dark/40 hover:text-grey-dark transition-colors relative z-[101]"
+              aria-label="Search"
+              title="Search"
+            >
+              <Search size={20} strokeWidth={1} />
+            </button>
+          </div>
+
           <div className="hidden lg:flex space-x-8 text-[10px] tracking-[0.3em] font-medium whitespace-nowrap">
             {navLinks?.map((link: any, i: number) => (
               <button
@@ -97,13 +110,13 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
         <div className="flex items-center gap-8">
           <button
             onClick={() => setIsSearchOpen(true)}
-            className="text-grey-dark/40 hover:text-grey-dark transition-colors"
+            className="text-grey-dark/40 hover:text-grey-dark transition-colors relative z-[101]"
           >
             <Search size={20} strokeWidth={1} />
           </button>
           <button
             onClick={onOpenWishlist}
-            className="text-grey-dark/40 hover:text-grey-dark transition-colors relative"
+            className="text-grey-dark/40 hover:text-grey-dark transition-colors relative z-[101]"
           >
             <Heart size={20} strokeWidth={1} />
             {wishlistCount > 0 && (
@@ -112,7 +125,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
           </button>
           <button
             onClick={onOpenCart}
-            className="text-grey-dark/40 hover:text-grey-dark transition-colors relative"
+            className="text-grey-dark/40 hover:text-grey-dark transition-colors relative z-[101]"
           >
             <ShoppingBag size={20} strokeWidth={1} />
             {cartCount > 0 && (
@@ -478,12 +491,13 @@ const ProductGrid = ({ title, products, subtitle, id, onProductClick, onAddToCar
       </div>
 
       <div className="relative px-6 md:px-12 lg:px-24 w-full block">
-        <div className="absolute top-[40%] -translate-y-1/2 left-0 z-30 opacity-0 group-hover/section:opacity-100 transition-opacity duration-500">
+        {/* Always visible on mobile; hover/focus only on desktop */}
+        <div className="absolute top-[40%] -translate-y-1/2 left-0 z-30 opacity-100 md:opacity-0 group-hover/section:opacity-100 transition-opacity duration-500">
           <button onClick={() => scroll('left')} className="w-8 h-20 bg-grey-dark/10 backdrop-blur-sm text-grey-dark flex items-center justify-center">
             <ChevronLeft size={20} />
           </button>
         </div>
-        <div className="absolute top-[40%] -translate-y-1/2 right-0 z-30 opacity-0 group-hover/section:opacity-100 transition-opacity duration-500">
+        <div className="absolute top-[40%] -translate-y-1/2 right-0 z-30 opacity-100 md:opacity-0 group-hover/section:opacity-100 transition-opacity duration-500">
           <button onClick={() => scroll('right')} className="w-8 h-20 bg-grey-dark/10 backdrop-blur-sm text-grey-dark flex items-center justify-center">
             <ChevronRight size={20} />
           </button>
@@ -770,19 +784,19 @@ const ProductPage = ({
   };
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-28 pb-24 px-6 md:px-12 lg:px-24 bg-[#f9f9f7] min-h-screen">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-20 pb-16 px-4 md:px-12 lg:px-24 bg-[#f9f9f7] min-h-screen">
       <button onClick={onBack} className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest mb-12 text-grey-dark/40 hover:text-grey-dark">
         <ArrowLeft size={14} /> Back to Archive
       </button>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-16 max-w-7xl mx-auto items-start">
-        {/* LEFT CANVAS VIEWPORT FRAME */}
-        <div className="flex flex-col gap-4 sticky top-24">
-          <div className="w-full bg-[#f4f4f2] p-8 flex items-center justify-center border border-grey-dark/5 overflow-hidden">
+      <div className="flex flex-col md:flex-row gap-8 max-w-7xl mx-auto items-start">
+        {/* Image Container */}
+        <div className="w-full md:w-1/2">
+          <div className="w-full p-4 flex items-center justify-center border border-grey-dark/5 bg-[#f5f5f5]">
             <img
               src={activeImage || getProductImage(selectedProduct)}
               alt={selectedProduct.name}
-              className="max-h-[500px] w-full object-contain transition-all duration-500 ease-out product-display-image"
+              className="max-h-[300px] w-full object-contain transition-all duration-500 ease-out"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1000";
               }}
@@ -830,13 +844,15 @@ const ProductPage = ({
           </div>
 
           {/* COLORWAY SELECTION BUTTON HOOK PANEL */}
-          {rawColors.length > 0 && (
+          {selectedProduct.attributes?.find((a: any) => a.name?.toLowerCase().includes('color'))?.options?.length > 0 && (
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-[9px] uppercase tracking-[0.3em] font-black text-grey-dark/40">Select Colorway</span>
                 {selectedColor && <span className="text-[9px] uppercase tracking-widest font-black text-grey-dark">{selectedColor}</span>}
               </div>
-              <div className="flex flex-wrap gap-3">
+
+              {/* Dynamic + responsive swatch layout (handles variable attribute counts across products) */}
+              <div className="grid grid-cols-8 gap-3">
                 {rawColors.map((colorName: string, idx: number) => {
                   const hex = getColorHex(colorName);
                   const isSelected = selectedColor === colorName;
@@ -846,7 +862,7 @@ const ProductPage = ({
                       onClick={() => handleColorSelect(colorName)}
                       title={colorName}
                       style={{ backgroundColor: hex }}
-                      className={`w-8 h-8 rounded-none border transition-all duration-300 relative group transform ${isSelected
+                      className={`w-10 h-10 rounded-none border transition-all duration-300 relative group transform ${isSelected
                         ? 'border-grey-dark scale-110 shadow-md ring-1 ring-grey-dark/20'
                         : 'border-grey-dark/20 hover:border-grey-dark/60 hover:scale-105'
                         }`}
@@ -868,7 +884,7 @@ const ProductPage = ({
                 <span className="text-[9px] uppercase tracking-[0.3em] font-black text-grey-dark/40">Select Fit Matrix</span>
                 {selectedSize && <span className="text-[10px] font-mono font-bold text-grey-dark">{selectedSize}</span>}
               </div>
-              <div className="flex flex-wrap gap-3">
+              <div className="grid grid-cols-5 gap-3">
                 {rawSizes.map((size: string) => {
                   const isComboAvailable = isAvailable(selectedColor, size);
 
@@ -1188,6 +1204,7 @@ export default function App() {
                       banners_config={siteData.banners}
                     />
                   </div>
+
                   {(() => {
                     const displayCategories = [...categories];
                     if (homeCategoryFocus) {
@@ -1228,6 +1245,7 @@ export default function App() {
                 </>
               ) : selectedProduct ? (
                 <ProductPage
+                  key={selectedProduct?.id}
                   product={selectedProduct}
                   onBack={() => { setView('home'); setSelectedProduct(null); }}
                   onAddToCart={(p: Product, c: string | null, s: string | null, img: string | null) =>
