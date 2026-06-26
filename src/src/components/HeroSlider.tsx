@@ -1,23 +1,50 @@
 import { useState, useEffect } from 'react';
 import './HeroSlider.css';
 
-
-// Replace these URLs with your actual WordPress media URLs
-const images = [
-    "http://aurhouse-backend.local/wp-content/uploads/2026/05/cvb.jpg",
-    "http://aurhouse-backend.local/wp-content/uploads/2026/05/astestyc.png",
-    "http://aurhouse-backend.local/wp-content/uploads/2026/05/131c2a41a7f9a5c628df5d1e3833facb.jpg"
+const FALLBACK_IMAGES = [
+    "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&q=80&w=2000",
+    "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?auto=format&fit=crop&q=80&w=2000",
+    "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=80&w=2000"
 ];
+
+const WOO_BASE = 'https://shop.turbolucent.xyz/wp-json/wc/v3';
+const CK = 'ck_cc517a39cca39a046456dce78a9c222b679374bb';
+const CS = 'cs_c5d998c37fb8335687cc6e066c8a1a8ea61a80bd';
 
 export const HeroSlider = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [images, setImages] = useState<string[]>(FALLBACK_IMAGES);
+
+    useEffect(() => {
+        const loadImages = async () => {
+            try {
+                const sep = `?`;
+                const resp = await fetch(`${WOO_BASE}/products?per_page=100${sep}consumer_key=${CK}&consumer_secret=${CS}`);
+                if (!resp.ok) return;
+                const products = await resp.json();
+                const collected: string[] = [];
+                for (const p of products) {
+                    if (p.images && p.images.length > 0) {
+                        for (const img of p.images) {
+                            const src = typeof img === 'string' ? img : img?.src;
+                            if (src && !collected.includes(src)) collected.push(src);
+                        }
+                    }
+                }
+                if (collected.length > 0) setImages(collected.slice(0, 5));
+            } catch {
+                // keep fallback images
+            }
+        };
+        loadImages();
+    }, []);
 
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-        }, 5000); // Changes image every 5 seconds
+        }, 5000);
         return () => clearInterval(interval);
-    }, []);
+    }, [images.length]);
 
     return (
         <div className="relative w-full h-screen overflow-hidden">

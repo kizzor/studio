@@ -723,22 +723,32 @@ const ProductPage = ({
   const getOptions = (slug: string) => {
     if (!selectedProduct?.attributes) return [];
 
-    // Look for exact match OR the pa_ prefixed version
-    const attr = selectedProduct.attributes.find((a: any) =>
-      a.name?.toLowerCase() === slug.toLowerCase() ||
-      a.name?.toLowerCase() === `pa_${slug.toLowerCase()}`
-    );
+    // Look for exact match, pa_ prefixed, or partial match (color/colour)
+    const attr = selectedProduct.attributes.find((a: any) => {
+      const name = a.name?.toLowerCase() || '';
+      const target = slug.toLowerCase();
+      return name === target ||
+        name === `pa_${target}` ||
+        name.startsWith(target) ||
+        target.startsWith(name);
+    });
     return attr?.options || [];
   };
 
-  const rawColors = getOptions('color');
+  const rawColors = getOptions('colour').length > 0 ? getOptions('colour') : getOptions('color');
   const rawSizes = getOptions('size').length > 0 ? getOptions('size') : ['S', 'M', 'L', 'XL', 'XXL'];
 
   const getColorHex = (colorName: string): string => {
     const clean = colorName.toLowerCase().trim();
     const map: Record<string, string> = {
       'white': '#ffffff', 'red': '#ef4444', 'blue': '#3b82f6',
-      'green': '#22c55e', 'yellow': '#eab308', 'black': '#1b1b1b'
+      'green': '#22c55e', 'yellow': '#eab308', 'black': '#1b1b1b',
+      'navy': '#1e3a5f', 'grey': '#9ca3af', 'gray': '#9ca3af',
+      'brown': '#92400e', 'beige': '#d4c5a9', 'pink': '#ec4899',
+      'orange': '#f97316', 'purple': '#8b5cf6', 'maroon': '#7f1d1d',
+      'olive': '#65a30d', 'teal': '#14b8a6', 'cream': '#fef3c7',
+      'tan': '#d2b48c', 'ivory': '#fffff0', 'burgundy': '#800020',
+      'charcoal': '#36454f', 'mustard': '#e1ad01', 'rust': '#b7410e',
     };
     return map[clean] || '#cbd5e1';
   };
@@ -844,7 +854,7 @@ const ProductPage = ({
           </div>
 
           {/* COLORWAY SELECTION BUTTON HOOK PANEL */}
-          {selectedProduct.attributes?.find((a: any) => a.name?.toLowerCase().includes('color'))?.options?.length > 0 && (
+          {rawColors.length > 0 && (
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-[9px] uppercase tracking-[0.3em] font-black text-grey-dark/40">Select Colorway</span>
