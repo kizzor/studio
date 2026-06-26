@@ -7,7 +7,8 @@ export const INITIAL_CONFIG = {
     hero: {
         title: "TIMELESS REDEFINED.",
         subtitle: "WINTER COLLECTION 2026",
-        buttonText: "SHOP COLLECTION"
+        buttonText: "SHOP COLLECTION",
+        image_url: ""
     },
     dynamicSections: [
         {

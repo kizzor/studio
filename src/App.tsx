@@ -300,7 +300,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
   );
 };
 
-const Hero = ({ onNavigate, title, subtitle, backgroundImage, buttonText }: { onNavigate: (v: any) => void, title: string, subtitle: string, backgroundImage: string, buttonText: string }) => {
+const Hero = ({ onNavigate, title, subtitle, backgroundImage, buttonText }: { onNavigate: (v: any) => void, title: string, subtitle: string, backgroundImage?: string, buttonText: string }) => {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -440,7 +440,7 @@ const Banners = ({ onNavigate, banners_config }: { onNavigate: (v: any, p?: Prod
   );
 };
 
-const ProductGrid = ({ title, products, subtitle, id, onProductClick, onAddToCart }: { title: string, products: Product[], subtitle: string, id: string, onProductClick: (p: Product) => void, onAddToCart: (p: Product) => void }) => {
+const ProductGrid = ({ title, products, subtitle, id, onProductClick, onAddToCart }: React.PropsWithChildren<{ title: string, products: any[], subtitle: string, id: string, onProductClick: (p: any) => void, onAddToCart: (p: any) => void }>) => {
   const ref = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);

@@ -32,7 +32,7 @@ export const getProductImage = (product: any): string => {
     // Handle local environment URL mapping if necessary
     // If your WooCommerce images are stored with the live domain, 
     // you might need to replace it here:
-    return imageUrl.replace('https://your-live-site.com', import.meta.env.VITE_WOOCOMMERCE_API_URL || '');
+    return imageUrl;
 };
 
 export const CartDrawer = ({
@@ -188,11 +188,7 @@ export const ProductPage = ({
         if (selectedProduct?.type === 'variable' && selectedProduct.id) {
             const fetchVariations = async () => {
                 try {
-                    const response = await woocommerce.get(`products/${selectedProduct.id}/variations`, {
-                        params: {
-                            per_page: 100
-                        }
-                    });
+                    const response = await woocommerce.get(`products/${selectedProduct.id}/variations?per_page=100`);
                     const vars = response.data;
                     setLoadedVariations(vars || []);
                 } catch (err) {
