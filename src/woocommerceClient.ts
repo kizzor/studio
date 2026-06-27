@@ -4,10 +4,23 @@ const BASE_URL = 'https://shop.turbolucent.xyz/wp-json/wc/v3';
 
 export const woocommerce = {
     get: async (endpoint: string) => {
-        const separator = endpoint.includes('?') ? '&' : '?';
-        const url = `${BASE_URL}/${endpoint}${separator}consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}`;
+        // endpoint may already include query params (e.g. "products?per_page=100&_cb=...")
+        // Build the final URL robustly to avoid malformed "??" in query strings.
+        const [pathPart, queryPart = ''] = endpoint.split('?');
 
-        const response = await fetch(url, {
+        const url = new URL(`${BASE_URL}/${pathPart}`);
+
+        // keep original query params from endpoint
+        if (queryPart) {
+            const qs = new URLSearchParams(queryPart);
+            for (const [k, v] of qs.entries()) url.searchParams.set(k, v);
+        }
+
+        // auth params
+        url.searchParams.set('consumer_key', CONSUMER_KEY);
+        url.searchParams.set('consumer_secret', CONSUMER_SECRET);
+
+        const response = await fetch(url.toString(), {
             method: 'GET',
         });
 

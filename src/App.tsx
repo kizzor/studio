@@ -693,24 +693,22 @@ const ProductPage = ({
     setActiveImage(getProductImage(selectedProduct));
     setSelectedColor(null);
     setSelectedSize(null);
-    setLoadedVariations([]);
-  }, [selectedProduct.id]);
 
-  // Fetch full variation objects because the parent product object is often incomplete
-  useEffect(() => {
-    if (selectedProduct?.type === 'variable' && selectedProduct.id) {
-      const fetchVariations = async () => {
-        try {
-          const response = await woocommerce.get(`products/${selectedProduct.id}/variations?per_page=100`);
-          const vars = Array.isArray(response) ? response : response.data;
-          setLoadedVariations(vars || []);
-        } catch (err) {
-          console.error("Failed to fetch variations:", err);
-        }
-      };
-      fetchVariations();
+    const isVariable = selectedProduct?.type === 'variable';
+    if (isVariable && selectedProduct.id) {
+      woocommerce.get(`products/${selectedProduct.id}/variations?per_page=100`)
+        .then((raw: any) => {
+          let vars: any[] = [];
+          if (Array.isArray(raw)) vars = raw;
+          else if (Array.isArray(raw?.data)) vars = raw.data;
+          else if (Array.isArray(raw?.value)) vars = raw.value;
+          setLoadedVariations(vars);
+        })
+        .catch(() => {
+          setLoadedVariations([]);
+        });
     }
-  }, [selectedProduct.id, selectedProduct.type]);
+  }, [selectedProduct.id]);
 
   const handleProductClick = (p: any) => {
     setSelectedProduct(p);
@@ -735,8 +733,10 @@ const ProductPage = ({
     return attr?.options || [];
   };
 
-  const rawColors = getOptions('colour').length > 0 ? getOptions('colour') : getOptions('color');
-  const rawSizes = getOptions('size').length > 0 ? getOptions('size') : ['S', 'M', 'L', 'XL', 'XXL'];
+  const normalizeToken = (v: any): string => String(v ?? '').toLowerCase().trim();
+
+  const allColors = getOptions('colour').length > 0 ? getOptions('colour') : getOptions('color');
+  const allSizes = getOptions('size').length > 0 ? getOptions('size') : ['S', 'M', 'L', 'XL', 'XXL'];
 
   const getColorHex = (colorName: string): string => {
     const clean = colorName.toLowerCase().trim();
@@ -753,44 +753,68 @@ const ProductPage = ({
     return map[clean] || '#cbd5e1';
   };
 
+  const getVarAttr = (v: any, attrName: string): string => {
+    if (!v) return '';
+    if (Array.isArray(v.attributes)) {
+      const found = v.attributes.find((a: any) => {
+        const n = (a?.name || '').toLowerCase();
+        return n === attrName || n.startsWith(attrName) || attrName.startsWith(n);
+      });
+      return (found?.option || '').toLowerCase().trim();
+    }
+    return '';
+  };
+
+  const getVarImage = (v: any): string => {
+    const img = v?.image;
+    if (typeof img === 'string') return img;
+    if (img?.src) return img.src;
+    if (v?.image_url) return v.image_url;
+    return '';
+  };
+
+  const inStockVariations = loadedVariations.filter((v: any) => v?.stock_status !== 'outofstock');
+
+  const colorsWithVariations = new Set(inStockVariations.map((v: any) => getVarAttr(v, 'colour') || getVarAttr(v, 'color')).filter(Boolean));
+
+  const rawColors = colorsWithVariations.size > 0
+    ? allColors.filter(c => colorsWithVariations.has(c.toLowerCase().trim()))
+    : allColors;
+
+  const sizesForSelectedColor = new Set(
+    inStockVariations
+      .filter((v: any) => {
+        const vc = getVarAttr(v, 'colour') || getVarAttr(v, 'color');
+        return selectedColor ? vc === selectedColor.toLowerCase().trim() : true;
+      })
+      .map((v: any) => getVarAttr(v, 'size'))
+      .filter(Boolean)
+  );
+
+  const rawSizes = allSizes;
+
   const handleColorSelect = (colorName: string) => {
     setSelectedColor(colorName);
-    const target = colorName.toLowerCase().trim();
+    const ct = colorName.toLowerCase().trim();
 
-    // Search within the fully loaded variations fetched from the API
-    const match = loadedVariations.find((v: any) => {
-      return v.attributes?.some((attr: any) => {
-        const option = attr.option?.toLowerCase().trim();
-        return option === target;
-      });
+    const match = inStockVariations.find((v: any) => {
+      const vc = getVarAttr(v, 'colour') || getVarAttr(v, 'color');
+      return vc === ct;
     });
 
-    if (match && match.image?.src) {
-      setActiveImage(match.image.src);
+    if (match) {
+      const img = getVarImage(match);
+      if (img) setActiveImage(img);
+      const firstSize = getVarAttr(match, 'size');
+      if (firstSize) setSelectedSize(firstSize.toUpperCase());
     } else {
-      // Fallback: search product gallery images for the color name in the URL/filename
-      const galleryMatch = selectedProduct.images?.find((img: any) =>
-        img.src?.toLowerCase().includes(colorName.toLowerCase())
-      );
-      if (galleryMatch) setActiveImage(galleryMatch.src);
-      else console.warn("No match or image found for:", colorName);
+      setActiveImage(getProductImage(selectedProduct));
     }
   };
 
-  const isAvailable = (color: string | null, size: string | null) => {
-    if (!color || !size || selectedProduct.type !== 'variable') return true;
-
-    if (loadedVariations.length === 0) return true;
-
-    return loadedVariations.some((v: any) => {
-      const matchesColor = v.attributes?.some((attr: any) =>
-        attr.option?.toLowerCase().trim() === color.toLowerCase().trim()
-      );
-      const matchesSize = v.attributes?.some((attr: any) =>
-        attr.option?.toLowerCase().trim() === size.toLowerCase().trim()
-      );
-      return matchesColor && matchesSize && v.stock_status !== 'outofstock';
-    });
+  const isSizeAvailable = (size: string) => {
+    if (!selectedColor) return sizesForSelectedColor.size === 0 || sizesForSelectedColor.has(size.toLowerCase().trim());
+    return sizesForSelectedColor.has(size.toLowerCase().trim());
   };
 
   return (
@@ -896,19 +920,35 @@ const ProductPage = ({
               </div>
               <div className="grid grid-cols-5 gap-3">
                 {rawSizes.map((size: string) => {
-                  const isComboAvailable = isAvailable(selectedColor, size);
-
+                  const available = isSizeAvailable(size);
+                  const isSelected = normalizeToken(selectedSize) === normalizeToken(size);
                   return (
                     <button
                       key={size}
-                      disabled={!isComboAvailable}
-                      onClick={() => setSelectedSize(size)}
-                      className={`w-12 h-12 text-[10px] font-mono border font-black transition-all ${!isComboAvailable
-                        ? 'bg-grey-dark/5 text-grey-dark/20 border-grey-dark/5 cursor-not-allowed line-through opacity-25'
-                        : selectedSize === size
+                      disabled={!available}
+                      onClick={() => {
+                        if (!available) return;
+                        setSelectedSize(size);
+                        if (selectedColor) {
+                          const ct = selectedColor.toLowerCase().trim();
+                          const st = size.toLowerCase().trim();
+                          const match = inStockVariations.find((v: any) => {
+                            const vc = getVarAttr(v, 'colour') || getVarAttr(v, 'color');
+                            const vs = getVarAttr(v, 'size');
+                            return vc === ct && vs === st;
+                          });
+                          if (match) {
+                            const img = getVarImage(match);
+                            if (img) setActiveImage(img);
+                          }
+                        }
+                      }}
+                      className={`w-12 h-12 text-[10px] font-mono border font-black transition-all ${!available
+                        ? 'bg-grey-dark/5 text-grey-dark/20 border-grey-dark/5 cursor-not-allowed line-through'
+                        : isSelected
                           ? 'bg-grey-dark text-lemon border-grey-dark shadow-sm'
                           : 'bg-white text-grey-dark border-grey-dark/10 hover:border-grey-dark'
-                        }`}
+                      }`}
                     >
                       {size}
                     </button>
@@ -1101,21 +1141,74 @@ export default function App() {
         setProducts(parsedProducts);
 
         const uniqueCats = new Set<string>();
+
+        const normalizeCategoryName = (cat: any): string | null => {
+          if (!cat) return null;
+
+          // Common Woo shapes:
+          // - { name, slug }
+          // - { id, name }
+          // - strings
+          // - taxonomy objects
+          const name = typeof cat === 'string' ? cat : cat?.name;
+          const slug = typeof cat === 'string' ? null : cat?.slug;
+
+          const n = typeof name === 'string' ? name.trim() : '';
+          const s = typeof slug === 'string' ? slug.trim().toLowerCase() : '';
+
+          if (!n) return null;
+          if (s === 'uncategorized' || n.toLowerCase() === 'uncategorized') return null;
+          return n;
+        };
+
+        // Some plugins may attach categories as:
+        // - product.categories (array)
+        // - product.category (object)
+        // - product.taxonomies / product.attributes (non-standard)
+        const tryAddFromList = (list: any) => {
+          if (!Array.isArray(list)) return;
+          for (const cat of list) {
+            const norm = normalizeCategoryName(cat);
+            if (norm) uniqueCats.add(norm);
+          }
+        };
+
         parsedProducts.forEach((product: any) => {
-          if (product && product.categories && Array.isArray(product.categories)) {
-            product.categories.forEach((cat: any) => {
-              if (cat.name && cat.slug !== 'uncategorized') {
-                uniqueCats.add(cat.name);
-              }
-            });
+          // Preferred: product.categories
+          if (product?.categories) {
+            tryAddFromList(product.categories);
+          }
+
+          // Fallback: sometimes category may be a single object or nested
+          if (!product?.categories && product?.category) {
+            const norm = normalizeCategoryName(product.category);
+            if (norm) uniqueCats.add(norm);
           }
         });
 
-        if (uniqueCats.size === 0) {
-          setCategories(["ESSENTIAL ARCHIVE", "GENZ AZEZ"]);
-        } else {
-          setCategories(Array.from(uniqueCats));
+        const DEFAULTS = ["ESSENTIAL ARCHIVE", "GENZ AZEZ"];
+        const allCats = Array.from(uniqueCats);
+
+        // Deterministic order: sort by lowercase name.
+        allCats.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+
+        // Up to 10 categories for homepage.
+        const finalCats = allCats.length > 0 ? allCats.slice(0, 10) : DEFAULTS;
+
+        // Debug: verify what Woo payload returns + what we extract.
+        // Keep as lightweight as possible.
+        try {
+          console.log('[categories] extractedAllCount=', allCats.length, 'final=', finalCats);
+          if (Array.isArray(parsedProducts) && parsedProducts.length > 0) {
+            const sample = parsedProducts[0];
+            console.log('[categories] sampleProduct.categories=', sample?.categories);
+            console.log('[categories] sampleProduct.category=', sample?.category);
+          }
+        } catch (e) {
+          // ignore
         }
+
+        setCategories(finalCats);
       } catch (error) {
         console.error("WooCommerce payload normalization failure:", error);
         setCategories(["ESSENTIAL ARCHIVE", "GENZ AZEZ"]);
