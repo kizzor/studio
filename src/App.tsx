@@ -61,10 +61,10 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-6 transition-all duration-700 ${isScrolled ? 'bg-[#f9f9f7]/90 backdrop-blur-xl py-4 border-b border-grey-dark/5 shadow-sm' : 'bg-[#f9f9f7]/60 backdrop-blur-md border-b border-grey-dark/5'
+        className={`fixed top-0 left-0 right-0 z-50 grid grid-cols-[1fr_auto_1fr] items-center px-8 py-6 transition-all duration-700 ${isScrolled ? 'bg-[#f9f9f7]/90 backdrop-blur-xl py-4 border-b border-grey-dark/5 shadow-sm' : 'bg-[#f9f9f7]/60 backdrop-blur-md border-b border-grey-dark/5'
           }`}
       >
-        <div className="flex items-center gap-12">
+        <div className="flex items-center gap-12 justify-start">
           <button
             className="lg:hidden text-grey-dark hover:text-grey-dark/70 transition-colors"
             onClick={() => setIsMobileMenuOpen(true)}
@@ -98,7 +98,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
         </div>
 
         <motion.div
-          className="absolute left-1/2 -translate-x-1/2 cursor-pointer z-10 px-4 py-2 md:px-12 md:py-2.5 bg-grey-dark"
+          className="cursor-pointer z-10 px-4 py-2 md:px-12 md:py-2.5 bg-grey-dark justify-self-center"
           style={{ width: 'clamp(140px, 40%, 300px)' }}
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
@@ -107,7 +107,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
           <h1 className="text-[10px] md:text-xl lg:text-2xl font-sans font-black tracking-[0.4em] md:tracking-[0.8em] uppercase text-white -mr-[0.4em] md:-mr-[0.8em] text-center truncate">AURHOUSE</h1>
         </motion.div>
 
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-8 justify-end">
           <button
             onClick={() => setIsSearchOpen(true)}
             className="text-grey-dark/40 hover:text-grey-dark transition-colors relative z-[101]"
