@@ -61,7 +61,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between transition-all duration-700 ${isScrolled ? 'bg-[#f9f9f7]/90 backdrop-blur-xl py-3 border-b border-grey-dark/5 shadow-sm' : 'bg-[#f9f9f7]/60 backdrop-blur-md border-b border-grey-dark/5'
+        className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between transition-all duration-700 ${isScrolled ? 'bg-[#f9f9f7]/70 backdrop-blur-2xl py-3 border-b border-grey-dark/5 shadow-sm' : 'bg-[#f9f9f7]/40 backdrop-blur-lg border-b border-grey-dark/5'
           }`}
       >
         <div className="flex items-center gap-3 pl-2.5 py-2.5">
@@ -642,15 +642,15 @@ const Preloader = ({ onComplete }: { onComplete: () => void, key?: string }) => 
       transition={{ duration: 1.2, ease: [0.85, 0, 0.15, 1] }}
       className="fixed inset-0 z-[100] bg-lemon flex items-center justify-center overflow-hidden"
     >
-      <div className="relative">
+      <div className="relative inline-block">
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: "100%" }}
           transition={{ duration: 2.5, ease: "easeInOut" }}
-          className="absolute bottom-0 left-0 h-[1px] bg-grey-dark"
+          className="absolute bottom-2 left-0 h-[1px] bg-grey-dark"
         />
         <motion.h1
-          className="text-2xl md:text-4xl font-display italic text-grey-dark tracking-[0.5em] px-12 py-4 font-bold"
+          className="text-2xl md:text-4xl font-display italic text-grey-dark tracking-[0.5em] px-6 md:px-12 py-4 font-bold"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
@@ -1240,6 +1240,7 @@ export default function App() {
   const handleProductClick = (product: any) => {
     setSelectedProduct(product);
     setView('product');
+    window.scrollTo(0, 0);
   };
 
   return (

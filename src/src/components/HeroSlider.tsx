@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import './HeroSlider.css';
 
 const FALLBACK_IMAGES = [
-    "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&q=80&w=2000",
-    "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?auto=format&fit=crop&q=80&w=2000",
-    "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=80&w=2000"
+    "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=2000",
+    "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=2000",
+    "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&q=80&w=2000"
 ];
 
 const WOO_BASE = 'https://shop.turbolucent.xyz/wp-json/wc/v3';
@@ -47,7 +47,7 @@ export const HeroSlider = () => {
     }, [images.length]);
 
     return (
-        <div className="relative w-full h-screen overflow-hidden">
+        <div className="relative w-full h-[calc(100vh-15px)] md:h-screen overflow-hidden">
             {/* Sliding background */}
             <div
                 className="absolute inset-0 transition-all duration-1000 ease-in-out bg-cover bg-center"
