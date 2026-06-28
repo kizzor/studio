@@ -64,7 +64,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
         className={`fixed top-0 left-0 right-0 z-50 grid grid-cols-[1fr_auto_1fr] items-center px-8 py-6 transition-all duration-700 ${isScrolled ? 'bg-[#f9f9f7]/90 backdrop-blur-xl py-4 border-b border-grey-dark/5 shadow-sm' : 'bg-[#f9f9f7]/60 backdrop-blur-md border-b border-grey-dark/5'
           }`}
       >
-        <div className="flex items-center gap-12 justify-start">
+        <div className="flex items-center gap-4 lg:gap-12 justify-start">
           <button
             className="lg:hidden text-grey-dark hover:text-grey-dark/70 transition-colors"
             onClick={() => setIsMobileMenuOpen(true)}
@@ -72,17 +72,14 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
             <Menu size={22} strokeWidth={1.5} />
           </button>
 
-          {/* Mobile: Search icon next to AURHOUSE */}
-          <div className="lg:hidden flex items-center gap-4">
-            <button
-              onClick={() => setIsSearchOpen(true)}
-              className="text-grey-dark/40 hover:text-grey-dark transition-colors relative z-[101]"
-              aria-label="Search"
-              title="Search"
-            >
-              <Search size={20} strokeWidth={1} />
-            </button>
-          </div>
+          <button
+            onClick={() => setIsSearchOpen(true)}
+            className="lg:hidden text-grey-dark hover:text-grey-dark/70 transition-colors relative z-[101]"
+            aria-label="Search"
+            title="Search"
+          >
+            <Search size={20} strokeWidth={1} />
+          </button>
 
           <div className="hidden lg:flex space-x-8 text-[10px] tracking-[0.3em] font-medium whitespace-nowrap">
             {navLinks?.map((link: any, i: number) => (
@@ -107,16 +104,16 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
           <h1 className="text-[10px] md:text-xl lg:text-2xl font-sans font-black tracking-[0.4em] md:tracking-[0.8em] uppercase text-white -mr-[0.4em] md:-mr-[0.8em] text-center truncate">AURHOUSE</h1>
         </motion.div>
 
-        <div className="flex items-center gap-3 md:gap-8 justify-end pl-4">
+        <div className="flex items-center gap-4 md:gap-8 justify-end">
           <button
             onClick={() => setIsSearchOpen(true)}
-            className="hidden md:block text-grey-dark/40 hover:text-grey-dark transition-colors relative z-[101]"
+            className="hidden md:block text-grey-dark hover:text-grey-dark/70 transition-colors relative z-[101]"
           >
             <Search size={20} strokeWidth={1} />
           </button>
           <button
             onClick={onOpenWishlist}
-            className="text-grey-dark/40 hover:text-grey-dark transition-colors relative z-[101]"
+            className="text-grey-dark hover:text-grey-dark/70 transition-colors relative z-[101]"
           >
             <Heart size={20} strokeWidth={1} />
             {wishlistCount > 0 && (
@@ -125,7 +122,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
           </button>
           <button
             onClick={onOpenCart}
-            className="text-grey-dark/40 hover:text-grey-dark transition-colors relative z-[101]"
+            className="text-grey-dark hover:text-grey-dark/70 transition-colors relative z-[101]"
           >
             <ShoppingBag size={20} strokeWidth={1} />
             {cartCount > 0 && (
