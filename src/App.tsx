@@ -95,7 +95,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
         </div>
 
         <motion.div
-          className="cursor-pointer z-10 px-4 py-2 md:px-12 md:py-2.5 bg-grey-dark justify-self-center"
+          className="cursor-pointer z-10 px-5 py-2.5 md:px-14 md:py-3 bg-grey-dark justify-self-center"
           style={{ width: 'clamp(140px, 40%, 300px)' }}
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
@@ -518,10 +518,10 @@ const ProductGrid = ({ title, products, subtitle, id, onProductClick, onAddToCar
                     (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1000";
                   }}
                 />
-                <div className="absolute top-4 right-4 opacity-0 group-hover/card:opacity-100 transition-all duration-300 transform translate-y-[-4px] group-hover/card:translate-y-0 z-10">
+                <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10">
                   <button
                     onClick={(e) => { e.stopPropagation(); onAddToCart(product); }}
-                    className="bg-[rgba(27,27,27,0.75)] backdrop-blur-md text-lemon px-3 py-1.5 text-[9px] uppercase font-bold tracking-widest hover:bg-grey-dark transition-all shadow-sm border border-white/5"
+                    className="bg-white/20 backdrop-blur-md text-white px-3 py-1.5 text-[9px] uppercase font-bold tracking-widest hover:bg-white/40 transition-all shadow-sm border border-white/30"
                   >
                     Add
                   </button>
@@ -782,7 +782,7 @@ const ProductPage = ({
       .filter(Boolean)
   );
 
-  const rawSizes = allSizes;
+  const rawSizes = selectedColor ? allSizes.filter(s => sizesForSelectedColor.has(s.toLowerCase().trim())) : allSizes;
 
   const handleColorSelect = (colorName: string) => {
     setSelectedColor(colorName);
@@ -850,8 +850,8 @@ const ProductPage = ({
         {/* RIGHT PROPERTY DESCRIPTION STACKS */}
         <div className="space-y-8 pr-4">
           <div>
-            <h1 className="text-3xl font-black tracking-tight uppercase mb-3 text-grey-dark">{selectedProduct.name}</h1>
-            <p className="text-xl font-mono text-grey-dark/80 font-medium">₹{selectedProduct.price}</p>
+            <h1 className="text-2xl font-black tracking-tight uppercase mb-2 text-grey-dark">{selectedProduct.name}</h1>
+            <p className="text-lg font-mono text-grey-dark/80 font-medium">₹{selectedProduct.price}</p>
           </div>
 
           {selectedProduct.warning_text && (
@@ -869,7 +869,7 @@ const ProductPage = ({
               </div>
 
               {/* Dynamic + responsive swatch layout (handles variable attribute counts across products) */}
-              <div className="grid grid-cols-8 gap-3">
+              <div className="grid grid-cols-6 sm:grid-cols-8 gap-2 sm:gap-3">
                 {rawColors.map((colorName: string, idx: number) => {
                   const hex = getColorHex(colorName);
                   const isSelected = selectedColor === colorName;
@@ -879,7 +879,7 @@ const ProductPage = ({
                       onClick={() => handleColorSelect(colorName)}
                       title={colorName}
                       style={{ backgroundColor: hex }}
-                      className={`w-10 h-10 rounded-none border transition-all duration-300 relative group transform ${isSelected
+                      className={`w-9 h-9 sm:w-10 sm:h-10 rounded-none border transition-all duration-300 relative group transform ${isSelected
                         ? 'border-grey-dark scale-110 shadow-md ring-1 ring-grey-dark/20'
                         : 'border-grey-dark/20 hover:border-grey-dark/60 hover:scale-105'
                         }`}
@@ -901,16 +901,13 @@ const ProductPage = ({
                 <span className="text-[9px] uppercase tracking-[0.3em] font-black text-grey-dark/40">Select Fit Matrix</span>
                 {selectedSize && <span className="text-[10px] font-mono font-bold text-grey-dark">{selectedSize}</span>}
               </div>
-              <div className="grid grid-cols-5 gap-3">
+              <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3">
                 {rawSizes.map((size: string) => {
-                  const available = isSizeAvailable(size);
                   const isSelected = normalizeToken(selectedSize) === normalizeToken(size);
                   return (
                     <button
                       key={size}
-                      disabled={!available}
                       onClick={() => {
-                        if (!available) return;
                         setSelectedSize(size);
                         if (selectedColor) {
                           const ct = selectedColor.toLowerCase().trim();
@@ -926,9 +923,8 @@ const ProductPage = ({
                           }
                         }
                       }}
-                      className={`w-12 h-12 text-[10px] font-mono border font-black transition-all ${!available
-                        ? 'bg-grey-dark/5 text-grey-dark/20 border-grey-dark/5 cursor-not-allowed line-through'
-                        : isSelected
+                      className={`w-11 h-11 sm:w-12 sm:h-12 text-[10px] font-mono border font-black transition-all ${
+                        isSelected
                           ? 'bg-grey-dark text-lemon border-grey-dark shadow-sm'
                           : 'bg-white text-grey-dark border-grey-dark/10 hover:border-grey-dark'
                       }`}
@@ -960,14 +956,7 @@ const ProductPage = ({
                 : 'bg-grey-dark/10 text-grey-dark/30 cursor-not-allowed'
                 }`}
             >
-              {rawColors.length === 0 ? 'Add to Cart' : selectedColor && selectedSize ? `Add to Cart (${selectedColor} / ${selectedSize})` : 'Select Color & Size Matrix'}
-            </button>
-            <button
-              onClick={() => onToggleWishlist(selectedProduct)}
-              className="w-full py-4 border border-grey-dark/20 text-[10px] uppercase font-black tracking-widest flex items-center justify-center gap-2 hover:bg-grey-dark/5 transition-colors"
-            >
-              <Heart size={14} fill={isInWishlist ? "black" : "none"} />
-              {isInWishlist ? "In Wishlist" : "Add to Wishlist"}
+              {rawColors.length === 0 ? 'Buy Now' : selectedColor && selectedSize ? `Buy Now` : 'Select Color & Size Matrix'}
             </button>
           </div>
         </div>
