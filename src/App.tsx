@@ -61,10 +61,10 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 grid grid-cols-[1fr_auto_1fr] items-center px-8 py-6 transition-all duration-700 ${isScrolled ? 'bg-[#f9f9f7]/90 backdrop-blur-xl py-4 border-b border-grey-dark/5 shadow-sm' : 'bg-[#f9f9f7]/60 backdrop-blur-md border-b border-grey-dark/5'
+        className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between transition-all duration-700 ${isScrolled ? 'bg-[#f9f9f7]/90 backdrop-blur-xl py-3 border-b border-grey-dark/5 shadow-sm' : 'bg-[#f9f9f7]/60 backdrop-blur-md border-b border-grey-dark/5'
           }`}
       >
-        <div className="flex items-center gap-4 lg:gap-8 justify-start">
+        <div className="flex items-center gap-3 pl-2.5 py-2.5">
           <button
             className="text-grey-dark hover:text-grey-dark/70 transition-colors"
             onClick={() => setIsMobileMenuOpen(true)}
@@ -95,7 +95,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
         </div>
 
         <motion.div
-          className="cursor-pointer z-10 px-5 py-2.5 md:px-14 md:py-3 bg-grey-dark justify-self-center"
+          className="cursor-pointer z-10 px-5 py-2.5 md:px-14 md:py-3 bg-grey-dark absolute left-1/2 -translate-x-1/2"
           style={{ width: 'clamp(140px, 40%, 300px)' }}
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
@@ -104,7 +104,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
           <h1 className="text-[10px] md:text-xl lg:text-2xl font-sans font-black tracking-[0.4em] md:tracking-[0.8em] uppercase text-white -mr-[0.4em] md:-mr-[0.8em] text-center truncate">AURHOUSE</h1>
         </motion.div>
 
-        <div className="flex items-center gap-4 md:gap-8 justify-end">
+        <div className="flex items-center gap-3 pr-2.5 py-2.5">
           <button
             onClick={onOpenWishlist}
             className="text-grey-dark hover:text-grey-dark/70 transition-colors relative z-[101]"
@@ -706,7 +706,7 @@ const ProductPage = ({
     window.scrollTo(0, 0);
   };
 
-  const isInWishlist = wishlist.some((p: any) => p.id === selectedProduct.id);
+  const isInWishlist = wishlist.some((w: any) => w.product.id === selectedProduct.id);
   const imageTracks = Array.isArray(selectedProduct.images) ? selectedProduct.images : [];
 
   const getOptions = (slug: string) => {
@@ -958,6 +958,13 @@ const ProductPage = ({
             >
               {rawColors.length === 0 ? 'Buy Now' : selectedColor && selectedSize ? `Buy Now` : 'Select Color & Size Matrix'}
             </button>
+            <button
+              onClick={() => onToggleWishlist(selectedProduct, selectedColor, selectedSize)}
+              className="w-full py-4 border border-grey-dark/20 text-[10px] uppercase font-black tracking-widest flex items-center justify-center gap-2 hover:bg-grey-dark/5 transition-colors"
+            >
+              <Heart size={14} fill={isInWishlist ? "black" : "none"} />
+              {isInWishlist ? "In Wishlist" : "Add to Wishlist"}
+            </button>
           </div>
         </div>
       </div>
@@ -1020,7 +1027,7 @@ const CartDrawer = ({ isOpen, onClose, items, onRemove, onUpdateQty }: {
   );
 };
 
-const WishlistDrawer = ({ isOpen, onClose, items, onRemove, onAddToCart }: { isOpen: boolean, onClose: () => void, items: Product[], onRemove: (id: string) => void, onAddToCart: (p: Product) => void }) => {
+const WishlistDrawer = ({ isOpen, onClose, items, onRemove, onAddToCart }: { isOpen: boolean, onClose: () => void, items: { product: Product, color?: string | null, size?: string | null }[], onRemove: (id: string, color?: string | null, size?: string | null) => void, onAddToCart: (p: Product, color?: string | null, size?: string | null) => void }) => {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -1032,15 +1039,16 @@ const WishlistDrawer = ({ isOpen, onClose, items, onRemove, onAddToCart }: { isO
               <button onClick={onClose} className="p-2 hover:bg-grey-dark/5 rounded-full transition-colors"><X size={24} /></button>
             </div>
             <div className="flex-1 overflow-y-auto space-y-8">
-              {items.length === 0 ? <p className="text-[10px] uppercase tracking-widest text-grey-dark/30 text-center mt-20">No favorites selected yet.</p> : items.map(p => (
-                <div key={p.id} className="flex gap-4">
+              {items.length === 0 ? <p className="text-[10px] uppercase tracking-widest text-grey-dark/30 text-center mt-20">No favorites selected yet.</p> : items.map((item, idx) => (
+                <div key={`${item.product.id}-${item.color}-${item.size}-${idx}`} className="flex gap-4">
                   <div className="w-20 h-24 bg-grey-light overflow-hidden">
-                    <img src={getProductImage(p)} className="w-full h-full object-cover" />
+                    <img src={getProductImage(item.product)} className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 space-y-2">
-                    <p className="text-[10px] uppercase font-black">{p.name}</p>
-                    <button onClick={() => onAddToCart(p)} className="text-[8px] uppercase font-black text-grey-dark/40 block">Add to Cart</button>
-                    <button onClick={() => onRemove(p.id)} className="text-[8px] uppercase tracking-tighter text-grey-dark/40 underline">Remove</button>
+                    <p className="text-[10px] uppercase font-black">{item.product.name}</p>
+                    {(item.color || item.size) && <p className="text-[8px] uppercase text-grey-dark/40">{item.color || '—'} / {item.size || '—'}</p>}
+                    <button onClick={() => onAddToCart(item.product, item.color || null, item.size || null)} className="text-[8px] uppercase font-black text-grey-dark/40 block">Add to Cart</button>
+                    <button onClick={() => onRemove(item.product.id, item.color || null, item.size || null)} className="text-[8px] uppercase tracking-tighter text-grey-dark/40 underline">Remove</button>
                   </div>
                 </div>
               ))}
@@ -1070,7 +1078,7 @@ export default function App() {
   const [homeCategoryFocus, setHomeCategoryFocus] = useState<string | null>(null);
 
   const [cartItems, setCartItems] = useState<{ product: Product, qty: number, variant?: { color: string | null, size: string | null, image: string | null } }[]>([]);
-  const [wishlist, setWishlist] = useState<Product[]>([]);
+  const [wishlist, setWishlist] = useState<{ product: Product, color?: string | null, size?: string | null }[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
 
@@ -1221,10 +1229,11 @@ export default function App() {
     setIsCartOpen(true);
   };
 
-  const handleToggleWishlist = (product: Product) => {
+  const handleToggleWishlist = (product: Product, color?: string | null, size?: string | null) => {
     setWishlist(prev => {
-      if (prev.find(p => p.id === product.id)) return prev.filter(p => p.id !== product.id);
-      return [...prev, product];
+      const existing = prev.find(w => w.product.id === product.id && w.color === (color || null) && w.size === (size || null));
+      if (existing) return prev.filter(w => !(w.product.id === product.id && w.color === (color || null) && w.size === (size || null)));
+      return [...prev, { product, color: color || null, size: size || null }];
     });
   };
 
@@ -1358,8 +1367,8 @@ export default function App() {
               isOpen={isWishlistOpen}
               onClose={() => setIsWishlistOpen(false)}
               items={wishlist}
-              onRemove={(id) => setWishlist(prev => prev.filter(p => p.id !== id))}
-              onAddToCart={handleAddToCart}
+              onRemove={(id, color, size) => setWishlist(prev => prev.filter(w => !(w.product.id === id && w.color === (color || null) && w.size === (size || null))))}
+              onAddToCart={(p, color, size) => handleAddToCart(p, color || null, size || null)}
             />
           </>
         )}
