@@ -107,10 +107,10 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
           <h1 className="text-[10px] md:text-xl lg:text-2xl font-sans font-black tracking-[0.4em] md:tracking-[0.8em] uppercase text-white -mr-[0.4em] md:-mr-[0.8em] text-center truncate">AURHOUSE</h1>
         </motion.div>
 
-        <div className="flex items-center gap-8 justify-end">
+        <div className="flex items-center gap-3 md:gap-8 justify-end pl-4">
           <button
             onClick={() => setIsSearchOpen(true)}
-            className="text-grey-dark/40 hover:text-grey-dark transition-colors relative z-[101]"
+            className="hidden md:block text-grey-dark/40 hover:text-grey-dark transition-colors relative z-[101]"
           >
             <Search size={20} strokeWidth={1} />
           </button>
@@ -791,7 +791,7 @@ const ProductPage = ({
       .filter(Boolean)
   );
 
-  const rawSizes = allSizes;
+  const rawSizes = selectedColor ? allSizes.filter(s => sizesForSelectedColor.has(s.toLowerCase().trim())) : allSizes;
 
   const handleColorSelect = (colorName: string) => {
     setSelectedColor(colorName);
