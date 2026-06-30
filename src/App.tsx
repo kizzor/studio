@@ -101,7 +101,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
           whileTap={{ scale: 0.99 }}
           onClick={() => onNavigate('home')}
         >
-          <h1 className="text-[10px] md:text-xl lg:text-2xl font-sans font-black tracking-[0.4em] md:tracking-[0.8em] uppercase text-white -mr-[0.4em] md:-mr-[0.8em] text-center truncate">AURHOUSE</h1>
+          <h1 className="text-[10px] md:text-xl lg:text-2xl font-sans font-black tracking-[0.4em] md:tracking-[0.8em] uppercase text-white text-center whitespace-nowrap">AURHOUSE</h1>
         </motion.div>
 
         <div className="flex items-center gap-3 pr-2.5 py-2.5 lg:py-[18px]">
@@ -810,7 +810,7 @@ const ProductPage = ({
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-24 pb-16 px-4 md:px-12 lg:px-24 bg-[#f9f9f7] min-h-screen">
-      <div className="sticky top-[52px] z-30 mb-6 px-4 md:px-12 lg:px-24 py-3 bg-white/30 backdrop-blur-xl border-b border-grey-dark/5">
+      <div className="sticky top-[52px] z-[60] mb-6 px-4 md:px-12 lg:px-24 py-3 bg-white/30 backdrop-blur-xl border-b border-grey-dark/5">
         <button onClick={onBack} className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest text-grey-dark/40 hover:text-grey-dark">
           <ArrowLeft size={14} /> Back to Archive
         </button>
@@ -933,7 +933,7 @@ const ProductPage = ({
                           ? 'bg-grey-dark text-lemon border-grey-dark shadow-sm'
                           : available
                             ? 'bg-white text-grey-dark border-grey-dark/10 hover:border-grey-dark'
-                            : 'bg-white text-grey-dark/20 border-grey-dark/5 cursor-not-allowed opacity-30 line-through'
+                            : 'bg-white text-grey-dark/20 border-grey-dark/5 cursor-not-allowed opacity-30 line-through pointer-events-none'
                       }`}
                     >
                       {size}
