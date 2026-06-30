@@ -810,7 +810,7 @@ const ProductPage = ({
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-24 pb-16 px-4 md:px-12 lg:px-24 bg-[#f9f9f7] min-h-screen">
-      <div className="sticky top-[52px] z-30 mb-6 px-[22px] md:px-12 lg:px-24 py-[17px] md:py-3 bg-white/30 backdrop-blur-xl border-b border-grey-dark/5">
+      <div className="sticky top-[52px] z-30 mb-6 px-4 md:px-12 lg:px-24 py-3 bg-white/30 backdrop-blur-xl border-b border-grey-dark/5">
         <button onClick={onBack} className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest text-grey-dark/40 hover:text-grey-dark">
           <ArrowLeft size={14} /> Back to Archive
         </button>
@@ -823,7 +823,7 @@ const ProductPage = ({
             <img
               src={activeImage || getProductImage(selectedProduct)}
               alt={selectedProduct.name}
-              className="w-full h-auto max-h-[60vh] md:max-h-[75vh] object-contain transition-all duration-500 ease-out"
+              className="w-full h-auto max-h-[calc(60vh+10px)] md:max-h-[75vh] object-contain transition-all duration-500 ease-out"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1000";
               }}
