@@ -61,10 +61,10 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between transition-all duration-700 ${isScrolled ? 'bg-[#f9f9f7]/70 backdrop-blur-2xl py-3 border-b border-grey-dark/5 shadow-sm' : 'bg-[#f9f9f7]/40 backdrop-blur-lg border-b border-grey-dark/5'
+        className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between transition-all duration-700 ${isScrolled ? 'bg-[#f9f9f7]/70 backdrop-blur-2xl py-3 lg:py-[18px] border-b border-grey-dark/5 shadow-sm' : 'bg-[#f9f9f7]/40 backdrop-blur-lg border-b border-grey-dark/5'
           }`}
       >
-        <div className="flex items-center gap-3 pl-2.5 py-2.5">
+        <div className="flex items-center gap-3 pl-2.5 py-2.5 lg:py-[18px]">
           <button
             className="text-grey-dark hover:text-grey-dark/70 transition-colors"
             onClick={() => setIsMobileMenuOpen(true)}
@@ -95,8 +95,8 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
         </div>
 
         <motion.div
-          className="cursor-pointer z-10 px-5 py-2.5 md:px-14 md:py-3 bg-grey-dark absolute left-1/2 -translate-x-1/2"
-          style={{ width: 'clamp(140px, 40%, 300px)' }}
+          className="cursor-pointer z-10 px-5 py-2.5 md:px-10 lg:px-16 md:py-3 bg-grey-dark absolute left-1/2 -translate-x-1/2"
+          style={{ width: 'clamp(160px, 45%, 320px)' }}
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
           onClick={() => onNavigate('home')}
@@ -104,7 +104,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
           <h1 className="text-[10px] md:text-xl lg:text-2xl font-sans font-black tracking-[0.4em] md:tracking-[0.8em] uppercase text-white -mr-[0.4em] md:-mr-[0.8em] text-center truncate">AURHOUSE</h1>
         </motion.div>
 
-        <div className="flex items-center gap-3 pr-2.5 py-2.5">
+        <div className="flex items-center gap-3 pr-2.5 py-2.5 lg:py-[18px]">
           <button
             onClick={onOpenWishlist}
             className="text-grey-dark hover:text-grey-dark/70 transition-colors relative z-[101]"
@@ -904,10 +904,13 @@ const ProductPage = ({
               <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3">
                 {rawSizes.map((size: string) => {
                   const isSelected = normalizeToken(selectedSize) === normalizeToken(size);
+                  const available = isSizeAvailable(size);
                   return (
                     <button
                       key={size}
+                      disabled={!available}
                       onClick={() => {
+                        if (!available) return;
                         setSelectedSize(size);
                         if (selectedColor) {
                           const ct = selectedColor.toLowerCase().trim();
@@ -926,7 +929,9 @@ const ProductPage = ({
                       className={`w-11 h-11 sm:w-12 sm:h-12 text-[10px] font-mono border font-black transition-all ${
                         isSelected
                           ? 'bg-grey-dark text-lemon border-grey-dark shadow-sm'
-                          : 'bg-white text-grey-dark border-grey-dark/10 hover:border-grey-dark'
+                          : available
+                            ? 'bg-white text-grey-dark border-grey-dark/10 hover:border-grey-dark'
+                            : 'bg-white text-grey-dark/20 border-grey-dark/5 cursor-not-allowed opacity-30 line-through'
                       }`}
                     >
                       {size}
