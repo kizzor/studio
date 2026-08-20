@@ -101,7 +101,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
           whileTap={{ scale: 0.99 }}
           onClick={() => onNavigate('home')}
         >
-          <h1 className="text-[10px] md:text-xl lg:text-2xl font-sans font-black tracking-[0.4em] md:tracking-[0.8em] uppercase text-white text-center whitespace-nowrap">AURHOUSE</h1>
+          <h1 className="text-[10px] md:text-xl lg:text-2xl font-sans font-black tracking-[0.4em] md:tracking-[0.8em] uppercase text-white text-center whitespace-nowrap">GadgetsHub NC</h1>
         </motion.div>
 
         <div className="flex items-center gap-3 pr-2.5 py-2.5 lg:py-[18px]">
@@ -928,13 +928,12 @@ const ProductPage = ({
                           }
                         }
                       }}
-                      className={`w-11 h-11 sm:w-12 sm:h-12 text-[10px] font-mono border font-black transition-all ${
-                        isSelected
+                      className={`w-11 h-11 sm:w-12 sm:h-12 text-[10px] font-mono border font-black transition-all ${isSelected
                           ? 'bg-grey-dark text-lemon border-grey-dark shadow-sm'
                           : available
                             ? 'bg-white text-grey-dark border-grey-dark/10 hover:border-grey-dark'
                             : 'bg-white text-grey-dark/20 border-grey-dark/5 cursor-not-allowed opacity-30 line-through pointer-events-none'
-                      }`}
+                        }`}
                     >
                       {size}
                     </button>
