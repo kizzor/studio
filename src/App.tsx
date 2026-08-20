@@ -387,7 +387,7 @@ const Banners = ({ onNavigate, banners_config }: { onNavigate: (v: any, p?: Prod
           className="relative h-[70vh] md:h-[90vh] overflow-hidden group cursor-pointer shadow-sm"
         >
           <img
-            src={banners_config?.[0]?.img || "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=1200"}
+            src={banners_config?.[0]?.img || "https://www.shutterstock.com/shutterstock/photos/1369308689/display_1500/stock-photo-young-man-holding-drone-before-flight-near-ocean-or-sea-pretty-guy-prepare-to-pilot-outdoor-1369308689.jpg"}
             alt="Trending Editorial 1"
             className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
           />
@@ -411,7 +411,7 @@ const Banners = ({ onNavigate, banners_config }: { onNavigate: (v: any, p?: Prod
           className="relative h-[70vh] md:h-[90vh] overflow-hidden group cursor-pointer shadow-sm"
         >
           <img
-            src={banners_config?.[1]?.img || "https://images.unsplash.com/photo-1534030347209-467a5b0ad3e6?auto=format&fit=crop&q=80&w=1200"}
+            src={banners_config?.[1]?.img || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNiptiYFaZKfACBnnjXp2CSEIPE5sLoHOwldu0MsHpd6X3zvqnAqDRMemt&s=10"}
             alt="Trending Editorial 2"
             className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
           />
