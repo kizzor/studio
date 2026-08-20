@@ -84,13 +84,12 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
         </div>
 
         <motion.div
-          className="absolute left-1/2 -translate-x-1/2 cursor-pointer z-10 px-4 py-2 md:px-12 md:py-2.5 bg-grey-dark"
-          style={{ width: 'clamp(140px, 40%, 300px)' }}
+          className="absolute left-1/2 -translate-x-1/2 cursor-pointer z-10 px-3 py-2 md:px-6 md:py-2.5 bg-grey-dark"
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
           onClick={() => onNavigate('home')}
         >
-          <h1 className="text-[10px] md:text-xl lg:text-2xl font-sans font-black tracking-[0.4em] md:tracking-[0.8em] uppercase text-white -mr-[0.4em] md:-mr-[0.8em] text-center truncate">AURHOUSE</h1>
+          <h1 className="text-[9px] md:text-sm lg:text-base font-sans font-black tracking-[0.2em] md:tracking-[0.3em] uppercase text-white text-center whitespace-nowrap">GadgetsHub NC</h1>
         </motion.div>
 
         <div className="flex items-center gap-8">
@@ -130,7 +129,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
             className="fixed inset-0 z-[90] bg-lemon p-8 md:p-16 flex flex-col text-grey-dark"
           >
             <div className="flex justify-between items-center mb-16">
-              <h1 className="text-xl font-sans font-black tracking-widest uppercase">AURHOUSE</h1>
+              <h1 className="text-xl font-sans font-black tracking-widest uppercase">GadgetsHub NC</h1>
               <button onClick={() => { setIsSearchOpen(false); setSearchQuery(""); }} className="hover:rotate-90 transition-transform duration-300">
                 <X size={24} strokeWidth={1.5} />
               </button>
@@ -252,7 +251,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
           >
             <div>
               <div className="flex justify-between items-center mb-16">
-                <h1 className="text-xl font-sans font-black tracking-widest uppercase">AURHOUSE</h1>
+                <h1 className="text-xl font-sans font-black tracking-widest uppercase">GadgetsHub NC</h1>
                 <button onClick={() => setIsMobileMenuOpen(false)}>
                   <X size={24} strokeWidth={1.5} />
                 </button>
@@ -277,7 +276,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
                 <Instagram size={20} className="text-grey-dark/50" strokeWidth={1.5} />
                 <Twitter size={20} className="text-grey-dark/50" strokeWidth={1.5} />
               </div>
-              <p className="text-[8px] uppercase tracking-widest text-grey-dark/30">© 2026 Aurhouse Archive</p>
+              <p className="text-[8px] uppercase tracking-widest text-grey-dark/30">© 2026 GadgetsHub NC</p>
             </div>
           </motion.div>
         )}
@@ -379,7 +378,7 @@ const Banners = ({ onNavigate, banners_config }: { onNavigate: (v: any, p?: Prod
           whileTap={{ scale: 0.98 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
-          className="relative h-[70vh] md:h-[90vh] overflow-hidden group cursor-pointer shadow-sm"
+          className="relative h-[45vh] sm:h-[55vh] md:h-[70vh] lg:h-[90vh] overflow-hidden group cursor-pointer shadow-sm"
         >
           <img
             src={banners_config?.[0]?.img || "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=1200"}
@@ -403,7 +402,7 @@ const Banners = ({ onNavigate, banners_config }: { onNavigate: (v: any, p?: Prod
           whileTap={{ scale: 0.98 }}
           transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
-          className="relative h-[70vh] md:h-[90vh] overflow-hidden group cursor-pointer shadow-sm"
+          className="relative h-[45vh] sm:h-[55vh] md:h-[70vh] lg:h-[90vh] overflow-hidden group cursor-pointer shadow-sm"
         >
           <img
             src={banners_config?.[1]?.img || "https://images.unsplash.com/photo-1534030347209-467a5b0ad3e6?auto=format&fit=crop&q=80&w=1200"}
@@ -542,7 +541,7 @@ const Footer = ({ brand }: { brand: { name: string, description: string } }) => 
     <footer className="pt-24 pb-12 px-6 md:px-12 lg:px-24 border-t border-grey-dark/5 bg-lemon text-grey-dark">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-24">
         <div className="md:col-span-2">
-          <h2 className="text-3xl font-sans font-black tracking-widest uppercase">{brand?.name || "AURHOUSE"}</h2>
+          <h2 className="text-3xl font-sans font-black tracking-widest uppercase">{brand?.name || "GadgetsHub NC"}</h2>
           <p className="text-grey-dark/50 text-sm max-w-sm mb-8 leading-relaxed font-medium">
             {brand?.description || "Reimaging the modern wardrobe through an essentialist lens. Our focus remains on shirts, tailored blazers, and silhouettes that endure."}
           </p>
@@ -575,7 +574,7 @@ const Footer = ({ brand }: { brand: { name: string, description: string } }) => 
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-12 border-t border-grey-dark/5 text-[8px] uppercase tracking-[0.3em] text-grey-dark/30 font-medium">
-        <p>© 2026 Aurhouse Collective. Distributed by Art.</p>
+        <p>© 2026 GadgetsHub NC. All rights reserved.</p>
         <div className="flex gap-8">
           <a href="#" className="hover:text-grey-dark transition-colors">Privacy Policy</a>
           <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
@@ -644,12 +643,12 @@ const Preloader = ({ onComplete }: { onComplete: () => void, key?: string }) => 
           className="absolute bottom-0 left-0 h-[1px] bg-grey-dark"
         />
         <motion.h1
-          className="text-2xl md:text-4xl font-display italic text-grey-dark tracking-[0.5em] px-12 py-4 font-bold"
+          className="text-xl md:text-3xl font-sans text-grey-dark tracking-[0.3em] px-8 py-4 font-black uppercase"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          AURHOUSE
+          GadgetsHub NC
         </motion.h1>
       </div>
     </motion.div>

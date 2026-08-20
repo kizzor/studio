@@ -50,7 +50,7 @@ export const HeroSlider = () => {
     }, [images.length]);
 
     return (
-        <div className="relative w-full h-[calc(100vh-15px)] md:h-screen overflow-hidden">
+        <div className="relative w-full h-[65vh] sm:h-[75vh] md:h-[85vh] lg:h-screen overflow-hidden">
             {/* Sliding background */}
             <div
                 className="absolute inset-0 transition-all duration-1000 ease-in-out bg-cover bg-center"
@@ -63,13 +63,13 @@ export const HeroSlider = () => {
             {/* Text + buttons layered over hero */}
             <div className="absolute inset-0 flex flex-col items-center justify-center z-10 text-center px-6 md:px-12">
                 <span
+                    className="text-[6px] md:text-[8px] lg:text-[10px]"
                     style={{
-                        fontSize: '10px',
                         letterSpacing: '0.4em',
                         textTransform: 'uppercase',
                         opacity: 0.9,
                         fontWeight: 700,
-                        marginBottom: 12,
+                        marginBottom: 8,
                         color: '#fdfdf0'
                     }}
                 >
@@ -77,14 +77,14 @@ export const HeroSlider = () => {
                 </span>
 
                 <h2
+                    className="text-[28px] sm:text-[36px] md:text-[56px] lg:text-[72px] xl:text-[92px]"
                     style={{
-                        fontSize: 'clamp(48px, 6vw, 92px)',
                         lineHeight: 1,
                         margin: 0,
                         fontWeight: 900,
                         textTransform: 'uppercase',
                         letterSpacing: '-0.02em',
-                        marginBottom: 28,
+                        marginBottom: 20,
                         color: '#fdfdf0'
                     }}
                 >
