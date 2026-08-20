@@ -1,6 +1,6 @@
 export const INITIAL_CONFIG = {
     brand: {
-        name: "AURHOUSE",
+        name: "GadgetsHub NC",
         philosophy: "PURITY OF FORM IS THE HIGHEST EXPRESSION OF CRAFT.",
         description: "Reimaging the modern wardrobe through an essentialist lens. Our focus remains on shirts, tailored blazers, and silhouettes that endure."
     },

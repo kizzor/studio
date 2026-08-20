@@ -85,7 +85,7 @@ const SdnAdmin = ({ onClose }: { onClose: () => void }) => {
             {/* Header Core Module */}
             <div className="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-start lg:items-center mb-12 border-b border-white/10 pb-8 gap-6">
                 <div>
-                    <h1 className="text-xl md:text-2xl tracking-[0.4em] font-black text-white">AURHOUSE // ENTERPRISE CONSOLE</h1>
+                    <h1 className="text-xl md:text-2xl tracking-[0.4em] font-black text-white">GadgetsHub NC // ENTERPRISE CONSOLE</h1>
                     <p className="text-[10px] text-white/40 tracking-[0.2em] mt-2">NATIVE HIGH-SPEED STORE ENGINE SYSTEM ACTIVE</p>
                 </div>
 

@@ -1,13 +1,13 @@
 {
     "brand": {
-        "name": "AURHOUSE",
+        "name": "GadgetsHub NC",
         "description": "Reimaging the modern wardrobe through an essentialist lens. Our focus remains on shirts, tailored blazers, and silhouettes that endure.",
         "philosophy": "PURITY OF FORM IS THE HIGHEST EXPRESSION OF CRAFT."
     },
     "hero": {
         "title": "TIMELESS REDEFINED.",
         "subtitle": "WINTER COLLECTION 2026",
-        "image_url": "https://images.unsplash.com/photo-1550246140-5119ae4790b8?auto=format&fit=crop&q=80&w=2000",
+        "image_url": "https://img.magnific.com/free-photo/drone-flying-mountain-landscape_23-2151978666.jpg?semt=ais_test_b&w=740&q=80",
         "buttonText": "SHOP COLLECTION"
     },
     "banners": [

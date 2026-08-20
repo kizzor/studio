@@ -2,9 +2,12 @@ import { useState, useEffect } from 'react';
 import './HeroSlider.css';
 
 const FALLBACK_IMAGES = [
-    "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=2000",
-    "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=2000",
-    "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&q=80&w=2000"
+    "https://img.magnific.com/free-photo/drone-flying-mountain-landscape_23-2151978666.jpg?semt=ais_test_b&w=740&q=80",
+    "https://t3.ftcdn.net/jpg/05/03/21/22/360_F_503212228_a0AR42cnAoOZvr3opwpR1HDfe0okGxFj.jpg",
+    "https://static.vecteezy.com/system/resources/thumbnails/056/699/882/small/a-black-and-orange-drone-flying-in-the-dark-photo.jpg",
+    "https://img.magnific.com/free-photo/quadcopter-flying-nature_231208-10459.jpg?semt=ais_hybrid&w=740&q=80",
+    "https://images.stockcake.com/public/7/d/c/7dccce1e-25aa-4305-ab2f-5eb442eb29bd/hovering-camera-drone-stockcake.jpg",
+    "https://static.vecteezy.com/system/resources/previews/058/329/090/non_2x/a-high-tech-drone-captured-in-motion-inside-an-underground-tunnel-showcasing-advanced-technology-and-industrial-aesthetics-photo.jpg"
 ];
 
 const WOO_BASE = 'https://shop.turbolucent.xyz/wp-json/wc/v3';
@@ -85,7 +88,7 @@ export const HeroSlider = () => {
                         color: '#fdfdf0'
                     }}
                 >
-                    AURHOUSE
+                    GadgetsHub NC
                 </h2>
 
                 <div className="flex flex-row md:items-center md:justify-center gap-6 flex-wrap">

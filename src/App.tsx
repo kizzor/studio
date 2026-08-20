@@ -135,7 +135,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
             className="fixed inset-0 z-[90] bg-lemon p-8 md:p-16 flex flex-col text-grey-dark"
           >
             <div className="flex justify-between items-center mb-16">
-              <h1 className="text-xl font-sans font-black tracking-widest uppercase">AURHOUSE</h1>
+              <h1 className="text-xl font-sans font-black tracking-widest uppercase">GadgetsHub NC</h1>
               <button onClick={() => { setIsSearchOpen(false); setSearchQuery(""); }} className="hover:rotate-90 transition-transform duration-300">
                 <X size={24} strokeWidth={1.5} />
               </button>
@@ -257,7 +257,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
           >
             <div>
               <div className="flex justify-between items-center mb-16">
-                <h1 className="text-xl font-sans font-black tracking-widest uppercase">AURHOUSE</h1>
+                <h1 className="text-xl font-sans font-black tracking-widest uppercase">GadgetsHub NC</h1>
                 <button onClick={() => setIsMobileMenuOpen(false)}>
                   <X size={24} strokeWidth={1.5} />
                 </button>
@@ -282,7 +282,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
                 <Instagram size={20} className="text-grey-dark/50" strokeWidth={1.5} />
                 <Twitter size={20} className="text-grey-dark/50" strokeWidth={1.5} />
               </div>
-              <p className="text-[8px] uppercase tracking-widest text-grey-dark/30">© 2026 Aurhouse Archive</p>
+              <p className="text-[8px] uppercase tracking-widest text-grey-dark/30">© 2026 GadgetsHub NC</p>
             </div>
           </motion.div>
         )}
@@ -548,7 +548,7 @@ const Footer = ({ brand }: { brand: { name: string, description: string } }) => 
     <footer className="pt-24 pb-12 px-6 md:px-12 lg:px-24 border-t border-grey-dark/5 bg-lemon text-grey-dark">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-24">
         <div className="md:col-span-2">
-          <h2 className="text-3xl font-sans font-black tracking-widest uppercase">{brand?.name || "AURHOUSE"}</h2>
+          <h2 className="text-3xl font-sans font-black tracking-widest uppercase">{brand?.name || "GadgetsHub NC"}</h2>
           <p className="text-grey-dark/50 text-sm max-w-sm mb-8 leading-relaxed font-medium">
             {brand?.description || "Reimaging the modern wardrobe through an essentialist lens. Our focus remains on shirts, tailored blazers, and silhouettes that endure."}
           </p>
@@ -581,7 +581,7 @@ const Footer = ({ brand }: { brand: { name: string, description: string } }) => 
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-12 border-t border-grey-dark/5 text-[8px] uppercase tracking-[0.3em] text-grey-dark/30 font-medium">
-        <p>© 2026 Aurhouse Collective. Distributed by Art.</p>
+        <p>© 2026 GadgetsHub NC. All Rights Reserved.</p>
         <div className="flex gap-8">
           <a href="#" className="hover:text-grey-dark transition-colors">Privacy Policy</a>
           <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
@@ -655,7 +655,7 @@ const Preloader = ({ onComplete }: { onComplete: () => void, key?: string }) => 
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          AURHOUSE
+          GadgetsHub NC
         </motion.h1>
       </div>
     </motion.div>
@@ -1071,7 +1071,7 @@ export default function App() {
   if (isAdmin) return <SdnAdmin onClose={() => { window.history.pushState({}, "", "/"); setIsAdmin(false); }} />;
 
   const [siteData, setSiteData] = useState({
-    hero: { title: 'AURHOUSE', subtitle: 'COLLECTION 2026', image_url: '' },
+    hero: { title: 'GadgetsHub NC', subtitle: 'COLLECTION 2026', image_url: '' },
     quote: { text: '' },
     banners: [],
     sections: [],
@@ -1121,9 +1121,9 @@ export default function App() {
             },
             {
               id: "signature-hoodie",
-              name: "AURHOUSE SIGNATURE HOODIE",
+              name: "GadgetsHub NC DRONE PRO",
               price: 2500,
-              brand: "AURHOUSE",
+              brand: "GadgetsHub NC",
               images: [
                 { src: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=1000" }
               ],
