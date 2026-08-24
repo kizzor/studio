@@ -669,6 +669,13 @@ const Preloader = ({ onComplete }: { onComplete: () => void, key?: string }) => 
         >
           GadgetsHub NC
         </motion.h1>
+        <motion.div
+          className="preloader-underline"
+          initial={{ scaleX: 0, opacity: 0 }}
+          animate={{ scaleX: 1, opacity: 1 }}
+          transition={{ delay: 0.7, duration: 1.6, ease: "easeOut" }}
+          aria-hidden="true"
+        />
       </div>
     </motion.div>
   );
