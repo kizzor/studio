@@ -18,6 +18,131 @@
 }
 
 @layer utilities {
+  .preloader {
+    background: #28113f;
+    color: #fff;
+    font-family: "Roboto", sans-serif;
+    border: none;
+    outline: none;
+  }
+
+  .preloader-liquid {
+    position: absolute;
+    inset: -25%;
+    opacity: 0.75;
+    background:
+      radial-gradient(ellipse at 24% 30%, rgba(164, 80, 224, 0.48), transparent 27%),
+      radial-gradient(ellipse at 77% 72%, rgba(75, 155, 214, 0.3), transparent 25%),
+      radial-gradient(ellipse at 50% 88%, rgba(139, 78, 190, 0.36), transparent 24%),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.07), transparent 38%, rgba(9, 3, 20, 0.28));
+    filter: blur(28px) saturate(125%);
+    animation: preloader-liquid-flow 9s ease-in-out infinite alternate;
+  }
+
+  .preloader-liquid::before,
+  .preloader-liquid::after {
+    content: "";
+    position: absolute;
+    width: 28vw;
+    height: 20vw;
+    min-width: 220px;
+    min-height: 160px;
+    border-radius: 48% 52% 42% 58%;
+    background: linear-gradient(135deg, rgba(211, 142, 255, 0.22), rgba(122, 61, 174, 0.16) 42%, rgba(16, 5, 32, 0.25));
+    box-shadow: none;
+  }
+
+  .preloader-liquid::before {
+    left: 10%;
+    top: 12%;
+    transform: rotate(-14deg);
+  }
+
+  .preloader-liquid::after {
+    right: 8%;
+    bottom: 12%;
+    transform: rotate(18deg) scale(0.9);
+  }
+
+  .preloader-sparkles {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.28) 0.5px, transparent 0.8px);
+    background-size: 53px 61px;
+    opacity: 0.55;
+    border: none;
+    outline: none;
+  }
+
+  .preloader-sparkle {
+    position: absolute;
+    display: block;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    animation: preloader-twinkle 2.8s ease-in-out infinite;
+  }
+
+  .preloader-galaxy {
+    position: absolute;
+    z-index: 0;
+    left: 50%;
+    top: 58%;
+    width: min(72vw, 620px);
+    height: 150px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background:
+      radial-gradient(ellipse, rgba(213, 162, 255, 0.42) 0%, rgba(134, 76, 190, 0.22) 36%, transparent 72%),
+      radial-gradient(ellipse, rgba(255, 255, 255, 0.18) 0%, transparent 52%);
+    filter: blur(20px);
+    opacity: 0.9;
+    pointer-events: none;
+    animation: preloader-galaxy-pulse 4.5s ease-in-out infinite;
+  }
+
+  @keyframes preloader-galaxy-pulse {
+
+    0%,
+    100% {
+      opacity: 0.55;
+      transform: translate(-50%, -50%) scaleX(0.92);
+    }
+
+    50% {
+      opacity: 0.95;
+      transform: translate(-50%, -50%) scaleX(1.08);
+    }
+  }
+
+  @keyframes preloader-liquid-flow {
+    from {
+      transform: translate3d(-3%, -2%, 0) scale(1);
+    }
+
+    to {
+      transform: translate3d(3%, 2%, 0) scale(1.12);
+    }
+  }
+
+  @keyframes preloader-twinkle {
+
+    0%,
+    100% {
+      opacity: 0.2;
+      transform: scale(0.65);
+    }
+
+    45% {
+      opacity: 1;
+      transform: scale(1.35);
+    }
+
+    60% {
+      opacity: 0.45;
+      transform: scale(0.9);
+    }
+  }
+
   .text-reveal {
     @apply relative overflow-hidden;
   }

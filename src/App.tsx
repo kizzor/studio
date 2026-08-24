@@ -61,7 +61,7 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between transition-all duration-700 ${isScrolled ? 'bg-[#f9f9f7]/70 backdrop-blur-2xl py-3 lg:py-[18px] border-b border-grey-dark/5 shadow-sm' : 'bg-[#f9f9f7]/40 backdrop-blur-lg border-b border-grey-dark/5'
+        className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between transition-all duration-700 ${isScrolled ? 'bg-[#f9f9f7]/70 backdrop-blur-2xl py-3 lg:py-[18px] shadow-sm' : 'bg-[#f9f9f7]/40 backdrop-blur-lg'
           }`}
       >
         <div className="flex items-center gap-3 pl-2.5 py-2.5 lg:py-[18px]">
@@ -95,13 +95,12 @@ const Navbar = ({ onNavigate, cartCount, wishlistCount, onOpenCart, onOpenWishli
         </div>
 
         <motion.div
-          className="cursor-pointer z-10 px-5 py-2.5 md:px-10 lg:px-16 md:py-3 bg-grey-dark absolute left-1/2 -translate-x-1/2"
-          style={{ width: 'clamp(160px, 45%, 320px)' }}
+          className="cursor-pointer z-10 px-4 py-2.5 md:px-8 lg:px-12 md:py-3 bg-grey-dark absolute left-1/2 -translate-x-1/2 overflow-hidden"
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
           onClick={() => onNavigate('home')}
         >
-          <h1 className="text-[10px] md:text-xl lg:text-2xl font-sans font-black tracking-[0.4em] md:tracking-[0.8em] uppercase text-white text-center whitespace-nowrap">GadgetsHub NC</h1>
+          <h1 className="text-[10px] md:text-lg lg:text-xl font-sans font-black tracking-[0.15em] md:tracking-[0.25em] uppercase text-white text-center whitespace-nowrap">GadgetsHub NC</h1>
         </motion.div>
 
         <div className="flex items-center gap-3 pr-2.5 py-2.5 lg:py-[18px]">
@@ -384,7 +383,7 @@ const Banners = ({ onNavigate, banners_config }: { onNavigate: (v: any, p?: Prod
           whileTap={{ scale: 0.98 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
-          className="relative h-[70vh] md:h-[90vh] overflow-hidden group cursor-pointer shadow-sm"
+          className="relative h-[40vh] sm:h-[50vh] md:h-[70vh] lg:h-[90vh] overflow-hidden group cursor-pointer shadow-sm"
         >
           <img
             src={banners_config?.[0]?.img || "https://www.shutterstock.com/shutterstock/photos/1369308689/display_1500/stock-photo-young-man-holding-drone-before-flight-near-ocean-or-sea-pretty-guy-prepare-to-pilot-outdoor-1369308689.jpg"}
@@ -408,7 +407,7 @@ const Banners = ({ onNavigate, banners_config }: { onNavigate: (v: any, p?: Prod
           whileTap={{ scale: 0.98 }}
           transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
-          className="relative h-[70vh] md:h-[90vh] overflow-hidden group cursor-pointer shadow-sm"
+          className="relative h-[40vh] sm:h-[50vh] md:h-[70vh] lg:h-[90vh] overflow-hidden group cursor-pointer shadow-sm"
         >
           <img
             src={banners_config?.[1]?.img || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNiptiYFaZKfACBnnjXp2CSEIPE5sLoHOwldu0MsHpd6X3zvqnAqDRMemt&s=10"}
@@ -630,6 +629,14 @@ const CustomCursor = () => {
 };
 
 const Preloader = ({ onComplete }: { onComplete: () => void, key?: string }) => {
+  const sparkles = [
+    [18, 24, 2, 0.2], [23, 29, 1, 1.1], [28, 22, 1, 1.8], [31, 35, 2, 0.7],
+    [20, 39, 1, 1.5], [27, 42, 2, 0.4], [34, 29, 1, 2.2],
+    [69, 66, 2, 1.2], [74, 71, 1, 0.9], [80, 65, 2, 0.3], [84, 74, 1, 1.4],
+    [72, 79, 1, 2.1], [78, 82, 2, 0.6], [87, 68, 1, 1.6],
+    [43, 80, 1, 2.4], [49, 84, 2, 0.8], [55, 78, 1, 1.7], [58, 87, 1, 0.5]
+  ];
+
   useEffect(() => {
     const timer = setTimeout(onComplete, 3500);
     return () => clearTimeout(timer);
@@ -640,17 +647,22 @@ const Preloader = ({ onComplete }: { onComplete: () => void, key?: string }) => 
       initial={{ y: 0 }}
       exit={{ y: "-100%" }}
       transition={{ duration: 1.2, ease: [0.85, 0, 0.15, 1] }}
-      className="fixed inset-0 z-[100] bg-lemon flex items-center justify-center overflow-hidden"
+      className="preloader fixed inset-0 z-[100] flex items-center justify-center overflow-hidden"
     >
+      <div className="preloader-liquid" aria-hidden="true" />
+      <div className="preloader-sparkles" aria-hidden="true">
+        {sparkles.map(([left, top, size, delay], index) => (
+          <span
+            key={index}
+            className="preloader-sparkle"
+            style={{ left: `${left}%`, top: `${top}%`, width: `${size}px`, height: `${size}px`, animationDelay: `${delay}s` }}
+          />
+        ))}
+      </div>
       <div className="relative inline-block">
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: "100%" }}
-          transition={{ duration: 2.5, ease: "easeInOut" }}
-          className="absolute bottom-2 left-0 h-[1px] bg-grey-dark"
-        />
+        <div className="preloader-galaxy" aria-hidden="true" />
         <motion.h1
-          className="text-2xl md:text-4xl font-display italic text-grey-dark tracking-[0.5em] px-6 md:px-12 py-4 font-bold"
+          className="relative z-[1] text-xl md:text-3xl font-sans text-white tracking-[0.3em] px-8 py-4 font-black uppercase"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
@@ -929,10 +941,10 @@ const ProductPage = ({
                         }
                       }}
                       className={`w-11 h-11 sm:w-12 sm:h-12 text-[10px] font-mono border font-black transition-all ${isSelected
-                          ? 'bg-grey-dark text-lemon border-grey-dark shadow-sm'
-                          : available
-                            ? 'bg-white text-grey-dark border-grey-dark/10 hover:border-grey-dark'
-                            : 'bg-white text-grey-dark/20 border-grey-dark/5 cursor-not-allowed opacity-30 line-through pointer-events-none'
+                        ? 'bg-grey-dark text-lemon border-grey-dark shadow-sm'
+                        : available
+                          ? 'bg-white text-grey-dark border-grey-dark/10 hover:border-grey-dark'
+                          : 'bg-white text-grey-dark/20 border-grey-dark/5 cursor-not-allowed opacity-30 line-through pointer-events-none'
                         }`}
                     >
                       {size}
